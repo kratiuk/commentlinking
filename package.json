@@ -1,0 +1,93 @@
+{
+	"name": "commentlinking",
+	"displayName": "Comment Linking",
+	"description": "🔗 Link between comments in code. Create anchors and jump to them from anywhere",
+	"version": "0.1.0",
+	"icon": "resources/icon.png",
+	"author": { "name": "Viktor Kratiuk", "email": "viktorkratiuk@proton.me" },
+	"license": "MIT",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/viktorkratiuk/commentlinks.git"
+	},
+	"keywords": [
+		"Comment Linking",
+		"Comment Link",
+		"Comment",
+		"Comments",
+		"Links",
+		"Link",
+		"Linking"
+	],
+	"publisher": "viktorkratiuk",
+	"engines": {
+		"vscode": "^1.75.0"
+	},
+	"categories": [
+		"Programming Languages",
+		"Visualization",
+		"Other"
+	],
+	"activationEvents": [
+		"onStartupFinished"
+	],
+	"main": "./out/extension.js",
+	"scripts": {
+		"vscode:prepublish": "pnpm run compile",
+		"compile": "tsc -p ./",
+		"watch": "tsc -watch -p ./",
+		"package": "pnpm dlx vsce package"
+	},
+	"contributes": {
+		"commands": [
+			{
+				"command": "commentlinks.copyAnchorId",
+				"title": "Copy Anchor ID"
+			},
+			{
+				"command": "commentlinks.openAnchor",
+				"title": "Open Anchor"
+			}
+		],
+		"viewsContainers": {
+			"activitybar": [
+				{
+					"id": "commentlinks",
+					"title": "Anchors",
+					"icon": "resources/viewcontainer.svg"
+				}
+			]
+		},
+		"views": {
+			"commentlinks": [
+				{
+					"id": "commentlinks.anchors",
+					"name": "Anchors"
+				}
+			]
+		},
+		"menus": {
+			"commandPalette": [
+				{
+					"command": "commentlinks.copyAnchorId",
+					"when": "false"
+				},
+				{
+					"command": "commentlinks.openAnchor",
+					"when": "false"
+				}
+			],
+			"view/item/context": [
+				{
+					"command": "commentlinks.copyAnchorId",
+					"when": "view == commentlinks.anchors && viewItem == anchor",
+					"group": "inline"
+				}
+			]
+		}
+	},
+	"devDependencies": {
+		"@types/vscode": "^1.75.0",
+		"typescript": "^5.4.0"
+	}
+}
