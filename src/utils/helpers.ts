@@ -8,18 +8,20 @@ export function isSupportedDocument(doc: vscode.TextDocument): boolean {
 
     const isJs = id === 'javascript' || name.endsWith('.js');
     const isTs = id === 'typescript' || name.endsWith('.ts');
+    const isJson = id === 'json' || name.endsWith('.json');
+    const isJsonc = id === 'jsonc' || name.endsWith('.jsonc');
     const isPy = id === 'python' || name.endsWith('.py');
 
-    return isJs || isTs || isPy;
+    return isJs || isTs || isPy || isJson || isJsonc;
 }
 
-export const SUPPORTED_EXTENSIONS: string[] = ['js', 'ts', 'py'];
+export const SUPPORTED_EXTENSIONS: string[] = ['js', 'ts', 'py', 'json', 'jsonc'];
 
 export function getSupportedGlobPatterns(): string[] {
     return SUPPORTED_EXTENSIONS.map(ext => `**/*.${ext}`);
 }
 
-export async function findAllSupportedFiles(excludeGlob: string = '**/node_modules/**'): Promise<vscode.Uri[]> {
+export async function findAllSupportedFiles(excludeGlob: string = '**/{node_modules,.*}/**'): Promise<vscode.Uri[]> {
     const patterns = getSupportedGlobPatterns();
     const lists = await Promise.all(patterns.map(p => vscode.workspace.findFiles(p, excludeGlob)));
     const seen = new Set<string>();

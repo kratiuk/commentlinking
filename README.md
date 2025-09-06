@@ -21,15 +21,19 @@
 
 `🔗 Link between comments in code. Create anchors and jump to them from anywhere`
 
-### ✅ Supported languages
+### ✅ Supported languages and file formats
 - `JavaScript` (.js)
 - `TypeScript` (.ts)
 - `Python` (.py)
+- `JSON` (.json)
+- `JSON With Comments` (.jsonc)
 
 ### 🧠 How it works
 - Add an anchor comment where you want to jump to: `// [MyAnchor](#id)`
 - Reference it elsewhere: `// [Go to anchor](id)`
 - Click the link to jump to the anchor. The Anchors view shows all anchors across your workspace.
+
+
 
 ### 🎬 Examples
 - Basic Link ↔ Anchor interaction:
@@ -39,6 +43,12 @@
 - Anchors view (tree of all anchors):
 
   ![Anchors View Demo](./resources/demo/2.gif)
+
+### 📂 Indexing scope & exclusions
+- Scans all workspace folders for supported file extensions
+- Excludes by default:
+  - `node_modules/`
+  - any dot-directories (names starting with a dot), e.g. `.git/`, `.vscode/`, `.cache/`
 
 ### ✨ Features
 - 🔍 Anchors tree view to browse anchors across files
