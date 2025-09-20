@@ -2,7 +2,7 @@
 	"name": "commentlinking",
 	"displayName": "Comment Linking",
 	"description": "🔗 Link between comments in code. Create anchors and jump to them from anywhere",
-	"version": "0.2.1",
+	"version": "0.2.2",
 	"icon": "resources/icon.png",
 	"author": {
 		"name": "Viktor Kratiuk",
@@ -21,7 +21,7 @@
 	],
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/kratiuk/commentlinks.git"
+		"url": "https://github.com/kratiuk/commentlinking.git"
 	},
 	"keywords": [
 		"Comment Linking",
