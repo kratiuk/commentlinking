@@ -4,12 +4,12 @@
 		{
 			"type": "npm",
 			"script": "watch",
-			"problemMatcher": ["$tsc-watch"],
-			"isBackground": true,
+			"group": "build",
 			"presentation": {
 				"reveal": "never"
 			},
-			"label": "npm: watch"
+			"isBackground": true,
+			"problemMatcher": "$tsc-watch"
 		}
 	]
 }

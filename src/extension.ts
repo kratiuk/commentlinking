@@ -5,8 +5,10 @@ import { AnchorsTreeDataProvider } from './anchors/AnchorsTreeDataProvider';
 import { AnchorTreeItem } from './tree/AnchorTreeItem';
 import { isSupportedDocument, getSupportedGlobPatterns } from './utils/helpers';
 import { registerCommentDecorations, refreshDecorationsNow } from './decorations/commentDecorator';
+import { registerMarkdownDecorations } from './decorations/markdownDecorator';
 import { registerCommentDocumentLinks } from './links/commentLinksProvider';
 import { setSuppressDecorationOnJump } from './utils/helpers';
+import { registerMarkdownDocumentLinks } from './links/markdownLinksProvider';
 
 import messages from './constants/messages';
 
@@ -56,8 +58,21 @@ export function activate(context: vscode.ExtensionContext) {
 		);
 	}
 
+
 	registerCommentDecorations(context);
+	registerMarkdownDecorations(context);
 	registerCommentDocumentLinks(context);
+	registerMarkdownDocumentLinks(context);
+
+	context.subscriptions.push(
+		vscode.workspace.onDidChangeConfiguration((e) => {
+			if (e.affectsConfiguration('commentLinking.customFileTypes')) {
+				registerCommentDocumentLinks(context);
+				registerMarkdownDocumentLinks(context);
+				provider.rebuild();
+			}
+		})
+	);
 
 	context.subscriptions.push(
 		vscode.commands.registerCommand('commentlinks.openAnchor', async (anchorId: string) => {

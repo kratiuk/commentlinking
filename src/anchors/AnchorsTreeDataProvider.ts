@@ -5,10 +5,12 @@ import { anchorIndex } from './anchorIndex';
 import { AnchorTreeItem } from '../tree/AnchorTreeItem';
 import { FileTreeItem } from '../tree/FileTreeItem';
 import { findAllSupportedFiles } from '../utils/helpers';
-import { scanAnchorMatches } from '../utils/helpers';
+import { scanAnchorMatches, scanMarkdownAnchorMatches } from '../utils/helpers';
 
 declare function setInterval(handler: (...args: any[]) => void, timeout?: number, ...args: any[]): any;
 declare function clearInterval(handle: any): void;
+declare function setTimeout(handler: (...args: any[]) => void, timeout?: number, ...args: any[]): any;
+declare function clearTimeout(handle: any): void;
 
 type TreeNode = FileTreeItem | AnchorTreeItem;
 
@@ -21,6 +23,8 @@ export class AnchorsTreeDataProvider implements vscode.TreeDataProvider<TreeNode
 	private isInitialized = false;
 	private duplicateNotifier: any;
 	private currentDuplicateIds: string[] = [];
+	private outputChannel = vscode.window.createOutputChannel('Comment Linking');
+	private rebuildTimer: any;
 
 	constructor(private readonly context: vscode.ExtensionContext) { }
 
@@ -46,6 +50,19 @@ export class AnchorsTreeDataProvider implements vscode.TreeDataProvider<TreeNode
 	}
 
 	async rebuild() {
+		if (this.rebuildTimer) {
+			clearTimeout(this.rebuildTimer);
+		}
+
+		this.rebuildTimer = setTimeout(async () => {
+			await this.doRebuild();
+		}, 1000);
+	}
+
+	private async doRebuild() {
+		const time = new Date().toLocaleTimeString('en-US', { hour12: false });
+		this.outputChannel.appendLine(`🗂️ Indexing started at ${time}`);
+		
 		const anchorItems: AnchorTreeItem[] = [];
 		const files = await findAllSupportedFiles();
 
@@ -117,7 +134,8 @@ export class AnchorsTreeDataProvider implements vscode.TreeDataProvider<TreeNode
 
 	private extractAnchorsFromDocument(doc: vscode.TextDocument): AnchorTreeItem[] {
 		const results: AnchorTreeItem[] = [];
-		const matches = scanAnchorMatches(doc);
+		const isMd = doc.fileName.endsWith('.md');
+		const matches = isMd ? scanMarkdownAnchorMatches(doc) : scanAnchorMatches(doc);
 		for (const m of matches) {
 			results.push(new AnchorTreeItem(
 				m.anchorId,

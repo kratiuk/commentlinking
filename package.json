@@ -2,13 +2,26 @@
 	"name": "commentlinking",
 	"displayName": "Comment Linking",
 	"description": "🔗 Link between comments in code. Create anchors and jump to them from anywhere",
-	"version": "0.1.1",
+	"version": "0.2.0",
 	"icon": "resources/icon.png",
-	"author": { "name": "Viktor Kratiuk", "email": "viktorkratiuk@proton.me" },
+	"author": {
+		"name": "Viktor Kratiuk",
+		"email": "kratiuk@proton.me"
+	},
 	"license": "MIT",
+	"main": "./out/extension.js",
+	"publisher": "kratiuk",
+	"engines": {
+		"vscode": "^1.75.0"
+	},
+	"categories": [
+		"Programming Languages",
+		"Visualization",
+		"Other"
+	],
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/viktorkratiuk/commentlinks.git"
+		"url": "https://github.com/kratiuk/commentlinks.git"
 	},
 	"keywords": [
 		"Comment Linking",
@@ -19,19 +32,9 @@
 		"Link",
 		"Linking"
 	],
-	"publisher": "viktorkratiuk",
-	"engines": {
-		"vscode": "^1.75.0"
-	},
-	"categories": [
-		"Programming Languages",
-		"Visualization",
-		"Other"
-	],
 	"activationEvents": [
 		"onStartupFinished"
 	],
-	"main": "./out/extension.js",
 	"scripts": {
 		"vscode:prepublish": "pnpm run compile",
 		"compile": "tsc -p ./",
@@ -39,6 +42,24 @@
 		"package": "pnpm dlx vsce package"
 	},
 	"contributes": {
+		"configuration": {
+			"title": "Comment Linking",
+			"properties": {
+				"commentLinking.customFileTypes": {
+					"type": "object",
+					"default": {},
+					"description": "Custom file extensions with their comment syntax. Example: {\".vue\": \"js\", \".go\": \"js\", \".sh\": \"python\"}",
+					"additionalProperties": {
+						"type": "string",
+						"enum": [
+							"js",
+							"python"
+						],
+						"description": "Comment syntax type: 'js' for // comments, 'python' for # comments"
+					}
+				}
+			}
+		},
 		"commands": [
 			{
 				"command": "commentlinks.copyAnchorId",
@@ -62,7 +83,8 @@
 			"commentlinks": [
 				{
 					"id": "commentlinks.anchors",
-					"name": "Anchors"
+					"name": "Anchors",
+					"icon": "resources/viewcontainer.svg"
 				}
 			]
 		},
