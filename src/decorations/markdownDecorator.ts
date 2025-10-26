@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
-import { getSuppressDecorationOnJump, clearSuppressDecorationOnJump } from '../utils/helpers';
-import { scanMarkdownAnchorMatches, scanMarkdownLinkMatches } from '../utils/helpers';
+import { getSuppressDecorationOnJump, clearSuppressDecorationOnJump, isFileIgnored } from '../utils/helpers';
+import { scanMarkdownAnchorMatches, scanMarkdownLinkMatches, scanMarkdownBacklinkAnchorMatches, scanMarkdownBacklinkLinkMatches } from '../utils/helpers';
 import { createDecorationTypes } from './styles';
 
 let decorationsBundle: ReturnType<typeof createDecorationTypes> | null = null;
@@ -84,6 +84,78 @@ function buildMarkdownDecorationRanges(doc: vscode.TextDocument, selection: vsco
             }
         }
     }
+
+    const backlinkAnchorMatches = scanMarkdownBacklinkAnchorMatches(doc);
+    for (const m of backlinkAnchorMatches) {
+        const wordRange = new vscode.Range(
+            new vscode.Position(m.lineNumber, m.selectionStartColumn),
+            new vscode.Position(m.lineNumber, m.selectionEndColumn)
+        );
+        const pos = selection?.active;
+        const suppression = getSuppressDecorationOnJump();
+        let cursorInside = !!pos && pos.line === m.lineNumber && pos.character >= m.columnStart && pos.character <= m.fullEnd;
+        if (suppression && suppression.uri === doc.uri.toString() && suppression.line === m.lineNumber && suppression.character === pos?.character) {
+            cursorInside = false;
+        }
+        if (cursorInside) {
+            anchorTextActiveRanges.push({ range: wordRange });
+        } else {
+            anchorTextRanges.push({ range: wordRange });
+            if (m.selectionStartColumn > m.columnStart) {
+                hiddenRanges.push({
+                    range: new vscode.Range(
+                        new vscode.Position(m.lineNumber, m.columnStart),
+                        new vscode.Position(m.lineNumber, m.selectionStartColumn)
+                    )
+                });
+            }
+            if (m.fullEnd > m.selectionEndColumn) {
+                hiddenRanges.push({
+                    range: new vscode.Range(
+                        new vscode.Position(m.lineNumber, m.selectionEndColumn),
+                        new vscode.Position(m.lineNumber, m.fullEnd)
+                    )
+                });
+            }
+        }
+    }
+
+    // Handle markdown backlink links
+    const backlinkLinkMatches = scanMarkdownBacklinkLinkMatches(doc);
+    for (const m of backlinkLinkMatches) {
+        const wordRange = new vscode.Range(
+            new vscode.Position(m.lineNumber, m.selectionStartColumn),
+            new vscode.Position(m.lineNumber, m.selectionEndColumn)
+        );
+        const pos = selection?.active;
+        const suppression = getSuppressDecorationOnJump();
+        let cursorInside = !!pos && pos.line === m.lineNumber && pos.character >= m.columnStart && pos.character <= m.fullEnd;
+        if (suppression && suppression.uri === doc.uri.toString() && suppression.line === m.lineNumber && suppression.character === pos?.character) {
+            cursorInside = false;
+        }
+        if (cursorInside) {
+            linkTextActiveRanges.push({ range: wordRange });
+        } else {
+            linkTextRanges.push({ range: wordRange });
+            if (m.selectionStartColumn > m.columnStart) {
+                hiddenRanges.push({
+                    range: new vscode.Range(
+                        new vscode.Position(m.lineNumber, m.columnStart),
+                        new vscode.Position(m.lineNumber, m.selectionStartColumn)
+                    )
+                });
+            }
+            if (m.fullEnd > m.selectionEndColumn) {
+                hiddenRanges.push({
+                    range: new vscode.Range(
+                        new vscode.Position(m.lineNumber, m.selectionEndColumn),
+                        new vscode.Position(m.lineNumber, m.fullEnd)
+                    )
+                });
+            }
+        }
+    }
+
     return {
         anchorTextRanges,
         anchorTextActiveRanges,
@@ -99,10 +171,13 @@ function buildMarkdownDecorationRanges(doc: vscode.TextDocument, selection: vsco
 }
 
 export function registerMarkdownDecorations(context: vscode.ExtensionContext) {
-    const decorateEditor = (editor?: vscode.TextEditor) => {
+    const decorateEditor = async (editor?: vscode.TextEditor) => {
         if (!editor) return;
         const doc = editor.document;
         if (!doc.fileName.endsWith('.md')) return;
+        
+        if (await isFileIgnored(doc.uri)) return;
+        
         const selection = editor.selection;
         const {
             anchorTextRanges,

@@ -5,7 +5,7 @@ import { anchorIndex } from './anchorIndex';
 import { AnchorTreeItem } from '../tree/AnchorTreeItem';
 import { FileTreeItem } from '../tree/FileTreeItem';
 import { findAllSupportedFiles } from '../utils/helpers';
-import { scanAnchorMatches, scanMarkdownAnchorMatches } from '../utils/helpers';
+import { scanAnchorMatches, scanMarkdownAnchorMatches, scanBacklinkAnchorMatches, scanMarkdownBacklinkAnchorMatches } from '../utils/helpers';
 
 declare function setInterval(handler: (...args: any[]) => void, timeout?: number, ...args: any[]): any;
 declare function clearInterval(handle: any): void;
@@ -65,6 +65,11 @@ export class AnchorsTreeDataProvider implements vscode.TreeDataProvider<TreeNode
 		
 		const anchorItems: AnchorTreeItem[] = [];
 		const files = await findAllSupportedFiles();
+		
+		this.outputChannel.appendLine(`📁 Found ${files.length} files to scan`);
+		files.forEach(file => {
+			this.outputChannel.appendLine(`  - ${vscode.workspace.asRelativePath(file)}`);
+		});
 
 		for (const file of files) {
 			try {
@@ -135,6 +140,7 @@ export class AnchorsTreeDataProvider implements vscode.TreeDataProvider<TreeNode
 	private extractAnchorsFromDocument(doc: vscode.TextDocument): AnchorTreeItem[] {
 		const results: AnchorTreeItem[] = [];
 		const isMd = doc.fileName.endsWith('.md');
+		
 		const matches = isMd ? scanMarkdownAnchorMatches(doc) : scanAnchorMatches(doc);
 		for (const m of matches) {
 			results.push(new AnchorTreeItem(
@@ -147,6 +153,20 @@ export class AnchorsTreeDataProvider implements vscode.TreeDataProvider<TreeNode
 				m.selectionEndColumn
 			));
 		}
+
+		const backlinkMatches = isMd ? scanMarkdownBacklinkAnchorMatches(doc) : scanBacklinkAnchorMatches(doc);
+		for (const m of backlinkMatches) {
+			results.push(new AnchorTreeItem(
+				m.anchorId,
+				doc.uri,
+				m.lineNumber,
+				m.preview,
+				m.columnStart,
+				m.selectionStartColumn,
+				m.selectionEndColumn
+			));
+		}
+		
 		return results;
 	}
 }

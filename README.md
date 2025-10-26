@@ -29,7 +29,7 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/kratiuk/commentlinks/blob/master/LICENSE">
+  <a href="https://github.com/kratiuk/commentlinking/blob/master/LICENSE">
     <img alt="License" src="https://img.shields.io/badge/License-MIT-success?style=for-the-badge" />
   </a>
 </p>
@@ -37,15 +37,44 @@
 `🔗 Link between comments in code. Create anchors and jump to them from anywhere`
 
 ### 🎬 Examples
+
+#### 🧠 How it works
+
+- Add an anchor comment where you want to jump to: `[[AnchorID|Some anchor]]`
+- Reference it elsewhere: `[[#AnchorID|Go to anchor]]`
+- Click the link to jump to the anchor. The Anchors view shows all anchors across your workspace.
+
 - Basic Link ↔ Anchor interaction:
 
-  ![Link-Anchor Demo](./resources/demo/1.gif)
+  ![Link-Anchor Demo](./resources/demo/new/basic-preview.gif)
 
 - Anchors view (tree of all anchors):
 
-  ![Anchors View Demo](./resources/demo/2.gif)
+  _Note: This demo shows the legacy anchor syntax_
+  ![Anchors View Demo](./resources/demo/old/2.gif)
+
+  <details>
+  <summary>Click to see legacy syntax demo<br/>
+  (enable <code>commentLinking.enableLegacySyntax</code> in settings)</summary>
+
+  ![Legacy Syntax Demo](./resources/demo/old/1.gif)
+
+  **Legacy syntax format:**
+
+  For comments:
+
+  - `[Some Anchor](#SomeAnchorID)` - anchor
+  - `[Some Anchor](SomeAnchorID)` - link
+
+  For Markdown files:
+
+  - `[Some Anchor](<>#SomeAnchorID)` - anchor
+  - `[Some Anchor](<>SomeAnchorID)` - link
+
+  </details>
 
 ### ✅ Supported languages and file formats
+
 - `JavaScript` (.js)
 - `TypeScript` (.ts)
 - `Python` (.py)
@@ -53,22 +82,8 @@
 - `JSON With Comments` (.jsonc)
 - `Markdown` (.md) - full text support with special syntax
 
-### 🧠 How it works
-- Add an anchor comment where you want to jump to: `// [MyAnchor](#id)`
-- Reference it elsewhere: `// [Go to anchor](id)`
-- Click the link to jump to the anchor. The Anchors view shows all anchors across your workspace.
-
-### 📝 Syntax variations
-#### In code comments (JS/TS/Python/JSON):
-- **Create anchor:** `// [MyAnchor](#myId)`
-- **Link to anchor:** `// [Go to anchor](myId)`
-
-#### In Markdown files:
-- **Create anchor:** `[MyAnchor](<>#myId)`
-- **Link to anchor:** `[Go to anchor](<>myId)`
-- **Cross-reference:** Markdown can link to anchors in code comments and vice versa
-
 ### ⚙️ Custom File Types
+
 You can extend support to any file type by configuring custom comment syntax in VS Code settings:
 
 **Open Settings** → Search for `commentLinking.customFileTypes` **OR** directly edit your `settings.json` file
@@ -77,50 +92,66 @@ You can extend support to any file type by configuring custom comment syntax in 
 {
   "commentLinking.customFileTypes": {
     ".vue": "js",
-    ".go": "js", 
-    ".sh": "python",
-    ... other extensions you want to add support for ...
+    ".go": "js",
+    ".sh": "python"
+    // Other extensions you want to add support for
   }
 }
 ```
 
 **Configuration format:**
+
 - **Key** (e.g. `".vue"`) - File extension to add support for
 - **Value** - Comment syntax type to use:
   - `"js"` - Uses `//` comments (like JavaScript/TypeScript)
   - `"python"` - Uses `#` comments (like Python/Shell)
 
-**Here's how it would work for `.go` files:**
-```go
-// [MyGoAnchor](#goExample) - This works in .go files
-// [Link to anchor](goExample)
-```
-
 ### 📂 Indexing scope & exclusions
+
 - Scans all workspace folders for supported file extensions
 - Excludes by default:
   - `node_modules/`
   - any dot-directories (names starting with a dot), e.g. `.git/`, `.vscode/`, `.cache/`
+- Create `.commentlinkingignore` file in project root to exclude additional files/directories
 
 ### ✨ Features
+
 - 🔍 Anchors tree view to browse anchors across files
 - 🎯 Inline links in comments that jump to anchors
 - 🖍️ Smart decorations to highlight only the preview text
 - 📋 Copy anchor ID from the Anchors view
 
 ### 📦 Installation
+
 1. Install the extension
-2. Reload VS Code window (you’ll be prompted on first install)
+2. Reload `VS Code` window (you’ll be prompted on first install)
 
 ### 🧪 Development & Testing
+
 To test changes during development:
+
 1. Press `F5` to launch Extension Development Host
 2. Make changes to the code and save
 3. In the test window, run `Developer: Reload Window` to see updates
 
+To build and install the extension manually:
+
+1. Install all dependencies: `pnpm install`
+2. Build the extension package: `pnpm package`
+3. Install the generated `.vsix` file in VS Code: `Extensions > Install from VSIX...`
+
 ### ✅ Roadmap / To‑Do
+
 - [ ] 🧵 Support multiline comments (block and triple-quote styles)
+- [ ] 📖 Create Markdown preview with link and anchor support
+- [ ] 🔗 Add support for creating anchors and links without preview text in backlinks
+- [ ] 🔀 Add sorting by line numbers in anchor tree view
 - [ ] 🌐 Add more languages (e.g., `Go`, `Rust`) and support `.jsx/.tsx`
+- [ ] ⚙️ Add support for custom comment types for specific files
+- [ ] 🎨 Add functionality to configure anchor and link styles
+- [ ] 🔄 Add functionality to disable new syntax if users want to use only legacy syntax
+- [ ] 🏷️ Add button in anchor tree to toggle between displaying anchor IDs and preview text
 
 ---
+
 Made with 😡 by [Viktor Kratiuk](https://github.com/kratiuk)

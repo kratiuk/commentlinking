@@ -1,62 +1,80 @@
-import * as vscode from 'vscode';
+import * as vscode from "vscode";
 
-import { getSuppressDecorationOnJump, clearSuppressDecorationOnJump } from '../utils/helpers';
-import { isSupportedDocument } from '../utils/helpers';
-import { createDecorationTypes } from './styles';
-import { buildDecorationRanges } from './buildRanges';
+import {
+  getSuppressDecorationOnJump,
+  clearSuppressDecorationOnJump,
+  isFileIgnored,
+} from "../utils/helpers";
+import { isSupportedDocument } from "../utils/helpers";
+import { createDecorationTypes } from "./styles";
+import { buildDecorationRanges } from "./buildRanges";
 
 let _decorateEditorRef: ((editor?: vscode.TextEditor) => void) | null = null;
 
 export function refreshDecorationsNow() {
-	const editor = vscode.window.activeTextEditor;
-	if (_decorateEditorRef && editor) {
-		_decorateEditorRef(editor);
-	}
+  const editor = vscode.window.activeTextEditor;
+  if (_decorateEditorRef && editor) {
+    _decorateEditorRef(editor);
+  }
 }
 
 export function registerCommentDecorations(context: vscode.ExtensionContext) {
+  const {
+    anchorTextDecoration,
+    anchorTextActiveDecoration,
+    linkTextDecoration,
+    linkTextActiveDecoration,
+    hiddenDecoration,
+  } = createDecorationTypes(context);
 
-	const { anchorTextDecoration, anchorTextActiveDecoration, linkTextDecoration, linkTextActiveDecoration, hiddenDecoration } = createDecorationTypes(context);
+  const decorateEditor = async (editor?: vscode.TextEditor) => {
+    if (!editor) return;
+    const doc = editor.document;
+    if (!isSupportedDocument(doc)) return;
+    if (doc.fileName.endsWith(".md")) return;
+    if (await isFileIgnored(doc.uri)) return;
 
-	const decorateEditor = (editor?: vscode.TextEditor) => {
-		if (!editor) return;
-		const doc = editor.document;
-		if (!isSupportedDocument(doc)) return;
+    const {
+      anchorTextRanges,
+      anchorTextActiveRanges,
+      linkTextRanges,
+      linkTextActiveRanges,
+      hiddenRanges,
+    } = buildDecorationRanges(doc, editor.selection);
+    editor.setDecorations(anchorTextDecoration, anchorTextRanges);
+    editor.setDecorations(anchorTextActiveDecoration, anchorTextActiveRanges);
+    editor.setDecorations(linkTextDecoration, linkTextRanges);
+    editor.setDecorations(hiddenDecoration, hiddenRanges);
+    editor.setDecorations(linkTextActiveDecoration, linkTextActiveRanges);
+  };
 
-		const { anchorTextRanges, anchorTextActiveRanges, linkTextRanges, linkTextActiveRanges, hiddenRanges } = buildDecorationRanges(doc, editor.selection);
-		editor.setDecorations(anchorTextDecoration, anchorTextRanges);
-		editor.setDecorations(anchorTextActiveDecoration, anchorTextActiveRanges);
-		editor.setDecorations(linkTextDecoration, linkTextRanges);
-		editor.setDecorations(hiddenDecoration, hiddenRanges);
-		editor.setDecorations(linkTextActiveDecoration, linkTextActiveRanges);
-	};
+  _decorateEditorRef = decorateEditor;
 
-	_decorateEditorRef = decorateEditor;
+  for (const editor of vscode.window.visibleTextEditors) {
+    decorateEditor(editor);
+  }
 
-	for (const editor of vscode.window.visibleTextEditors) {
-		decorateEditor(editor);
-	}
-
-	context.subscriptions.push(
-		vscode.window.onDidChangeActiveTextEditor((e) => decorateEditor(e)),
-		vscode.workspace.onDidChangeTextDocument((e) => {
-			const active = vscode.window.activeTextEditor;
-			if (active && e.document === active.document) decorateEditor(active);
-		}),
-		vscode.window.onDidChangeTextEditorSelection((e) => {
-			const suppr = getSuppressDecorationOnJump();
-			if (suppr) {
-				const pos = e.textEditor.selection.active;
-				const sameDoc = e.textEditor.document.uri.toString() === suppr.uri;
-				const samePos = sameDoc && pos.line === suppr.line && pos.character === suppr.character;
-				if (!samePos) {
-					clearSuppressDecorationOnJump();
-				}
-			}
-			const active = vscode.window.activeTextEditor;
-			if (active) decorateEditor(active);
-		})
-	);
+  context.subscriptions.push(
+    vscode.window.onDidChangeActiveTextEditor((e) => decorateEditor(e)),
+    vscode.workspace.onDidChangeTextDocument((e) => {
+      const active = vscode.window.activeTextEditor;
+      if (active && e.document === active.document) decorateEditor(active);
+    }),
+    vscode.window.onDidChangeTextEditorSelection((e) => {
+      const suppr = getSuppressDecorationOnJump();
+      if (suppr) {
+        const pos = e.textEditor.selection.active;
+        const sameDoc = e.textEditor.document.uri.toString() === suppr.uri;
+        const samePos =
+          sameDoc &&
+          pos.line === suppr.line &&
+          pos.character === suppr.character;
+        if (!samePos) {
+          clearSuppressDecorationOnJump();
+        }
+      }
+      const active = vscode.window.activeTextEditor;
+      if (active) decorateEditor(active);
+    })
+  );
 }
-
-
