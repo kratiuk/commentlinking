@@ -40,7 +40,8 @@
     "vscode:prepublish": "pnpm run compile",
     "compile": "tsc -p ./",
     "watch": "tsc -watch -p ./",
-    "package": "pnpm dlx vsce package"
+    "package": "pnpm dlx vsce package",
+    "count": "cloc .vscode src package.json"
   },
   "contributes": {
     "configuration": {
