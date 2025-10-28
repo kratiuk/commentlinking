@@ -59,17 +59,7 @@
 
   ![Legacy Syntax Demo](./resources/demo/old/1.gif)
 
-  **Legacy syntax format:**
-
-  For comments:
-
-  - `[Some Anchor](#SomeAnchorID)` - anchor
-  - `[Some Anchor](SomeAnchorID)` - link
-
-  For Markdown files:
-
-  - `[Some Anchor](<>#SomeAnchorID)` - anchor
-  - `[Some Anchor](<>SomeAnchorID)` - link
+  ![Legacy Syntax](./resources/demo/old/old-syntax.png)
 
   </details>
 
@@ -151,6 +141,7 @@ To build and install the extension manually:
 - [ ] 🎨 Add functionality to configure anchor and link styles
 - [ ] 🔄 Add functionality to disable new syntax if users want to use only legacy syntax
 - [ ] 🏷️ Add button in anchor tree to toggle between displaying anchor IDs and preview text
+- [ ] 🔍 Add support for displaying all links to a specific anchor in the editor
 
 ---
 
