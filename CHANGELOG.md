@@ -1,5 +1,4 @@
 # Project
 
-- Legacy syntax example in README replaced from text to image, as it caused display conflicts on extension marketplaces
-- Added item to ROADMAP
-- Bump to 0.3.1
+- Added husky dependency for pre-commit hooks
+- Added special pre-commit hook to check if **CHANGELOG.md** contains Cyrillic characters (since developer writes CHANGELOG as quickly as possible in native language and this could sometimes accidentally end up in push due to oversight)

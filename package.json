@@ -41,7 +41,8 @@
     "compile": "tsc -p ./",
     "watch": "tsc -watch -p ./",
     "package": "pnpm dlx vsce package",
-    "count": "cloc .vscode src package.json"
+    "count": "cloc .vscode src package.json",
+    "prepare": "husky"
   },
   "contributes": {
     "configuration": {
@@ -117,6 +118,7 @@
   },
   "devDependencies": {
     "@types/vscode": "^1.75.0",
+    "husky": "^9.1.7",
     "typescript": "^5.4.0"
   }
 }
