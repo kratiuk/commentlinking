@@ -142,6 +142,7 @@ To build and install the extension manually:
 - [ ] 🔄 Add functionality to disable new syntax if users want to use only legacy syntax
 - [ ] 🏷️ Add button in anchor tree to toggle between displaying anchor IDs and preview text
 - [ ] 🔍 Add support for displaying all links to a specific anchor in the editor
+- [ ] 📁 Add support for using `.gitignore` file as default exclusion file
 
 ---
 
