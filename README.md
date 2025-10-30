@@ -42,7 +42,7 @@
 
 - Add an anchor comment where you want to jump to: `[[AnchorID|Some anchor]]`
 - Reference it elsewhere: `[[#AnchorID|Go to anchor]]`
-- Click the link to jump to the anchor. The Anchors view shows all anchors across your workspace.
+- Click the link while holding Ctrl (Cmd on macOS) to jump to the anchor. The Anchors view shows all anchors across your workspace
 
 - Basic Link ↔ Anchor interaction:
 
