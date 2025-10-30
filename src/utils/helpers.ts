@@ -1,6 +1,37 @@
 import * as vscode from "vscode";
+import { filterIgnoredFiles } from "./ignore";
 
 // Files
+
+// Function that finds all supported files in workspace and applies ignore patterns
+export async function findAllSupportedFiles(): Promise<vscode.Uri[]> {
+  const patterns = getSupportedGlobPatterns();
+
+  let allFiles: vscode.Uri[] = [];
+
+  const lists = await Promise.all(
+    patterns.map((p) => vscode.workspace.findFiles(p))
+  );
+  for (const arr of lists) {
+    allFiles.push(...arr);
+  }
+
+  // Apply ignore patterns
+  allFiles = await filterIgnoredFiles(allFiles);
+
+  // Remove duplicates
+  const seen = new Set<string>();
+  const result: vscode.Uri[] = [];
+  for (const uri of allFiles) {
+    const key = uri.toString();
+    if (!seen.has(key)) {
+      seen.add(key);
+      result.push(uri);
+    }
+  }
+
+  return result;
+}
 
 export function isSupportedDocument(doc: vscode.TextDocument): boolean {
   const fileName = doc.fileName;
@@ -75,106 +106,6 @@ export function getCommentPrefixesForDocument(
 
 export function getSupportedGlobPatterns(): string[] {
   return getAllSupportedExtensions().map((ext) => `**/*.${ext}`);
-}
-
-async function readCommentLinkingIgnore(): Promise<string[]> {
-  const workspaceFolders = vscode.workspace.workspaceFolders;
-  if (!workspaceFolders || workspaceFolders.length === 0) {
-    return [];
-  }
-
-  const ignorePatterns: string[] = [];
-
-  for (const folder of workspaceFolders) {
-    const ignoreFilePath = vscode.Uri.joinPath(
-      folder.uri,
-      ".commentlinkingignore"
-    );
-    try {
-      const document = await vscode.workspace.openTextDocument(ignoreFilePath);
-      const content = document.getText();
-      const lines = content
-        .split("\n")
-        .map((line: string) => line.trim())
-        .filter((line: string) => line && !line.startsWith("#"));
-      ignorePatterns.push(...lines);
-    } catch {}
-  }
-
-  return ignorePatterns;
-}
-
-export async function isFileIgnored(uri: vscode.Uri): Promise<boolean> {
-  const ignorePatterns = await readCommentLinkingIgnore();
-  if (ignorePatterns.length === 0) {
-    return false;
-  }
-
-  const relativePath = vscode.workspace.asRelativePath(uri);
-  return ignorePatterns.some((pattern) => {
-    // Simple pattern matching - support wildcards and directory matching
-    const regexPattern = pattern
-      .replace(/\./g, "\\.")
-      .replace(/\*/g, ".*")
-      .replace(/\//g, "\\/");
-    const regex = new RegExp(
-      `^${regexPattern}$|/${regexPattern}$|^${regexPattern}/|/${regexPattern}/`
-    );
-    return regex.test(relativePath);
-  });
-}
-
-export async function findAllSupportedFiles(
-  excludeGlob: string = "**/{node_modules,.*}/**"
-): Promise<vscode.Uri[]> {
-  const patterns = getSupportedGlobPatterns();
-
-  const ignorePatterns = await readCommentLinkingIgnore();
-
-  let allFiles: vscode.Uri[] = [];
-
-  if (ignorePatterns.length === 0) {
-    const lists = await Promise.all(
-      patterns.map((p) => vscode.workspace.findFiles(p, excludeGlob))
-    );
-    for (const arr of lists) {
-      allFiles.push(...arr);
-    }
-  } else {
-    const lists = await Promise.all(
-      patterns.map((p) => vscode.workspace.findFiles(p, excludeGlob))
-    );
-    for (const arr of lists) {
-      allFiles.push(...arr);
-    }
-
-    allFiles = allFiles.filter((uri) => {
-      const relativePath = vscode.workspace.asRelativePath(uri);
-      return !ignorePatterns.some((pattern) => {
-        const regexPattern = pattern
-          .replace(/\./g, "\\.")
-          .replace(/\*/g, ".*")
-          .replace(/\//g, "\\/");
-        const regex = new RegExp(
-          `^${regexPattern}$|/${regexPattern}$|^${regexPattern}/|/${regexPattern}/`
-        );
-        return regex.test(relativePath);
-      });
-    });
-  }
-
-  // Remove duplicates
-  const seen = new Set<string>();
-  const result: vscode.Uri[] = [];
-  for (const uri of allFiles) {
-    const key = uri.toString();
-    if (!seen.has(key)) {
-      seen.add(key);
-      result.push(uri);
-    }
-  }
-
-  return result;
 }
 
 export function getDocumentSelectorsForLinks(): vscode.DocumentSelector {
