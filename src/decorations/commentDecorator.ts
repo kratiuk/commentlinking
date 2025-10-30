@@ -3,8 +3,8 @@ import * as vscode from "vscode";
 import {
   getSuppressDecorationOnJump,
   clearSuppressDecorationOnJump,
-  isFileIgnored,
 } from "../utils/helpers";
+import { anchorIndex } from "../anchors/anchorIndex";
 import { isSupportedDocument } from "../utils/helpers";
 import { createDecorationTypes } from "./styles";
 import { buildDecorationRanges } from "./buildRanges";
@@ -32,7 +32,7 @@ export function registerCommentDecorations(context: vscode.ExtensionContext) {
     const doc = editor.document;
     if (!isSupportedDocument(doc)) return;
     if (doc.fileName.endsWith(".md")) return;
-    if (await isFileIgnored(doc.uri)) return;
+    if (!anchorIndex.isFileProcessed(doc.uri)) return;
 
     const {
       anchorTextRanges,

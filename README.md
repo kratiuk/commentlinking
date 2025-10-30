@@ -99,10 +99,9 @@ You can extend support to any file type by configuring custom comment syntax in 
 ### 📂 Indexing scope & exclusions
 
 - Scans all workspace folders for supported file extensions
-- Excludes by default:
-  - `node_modules/`
-  - any dot-directories (names starting with a dot), e.g. `.git/`, `.vscode/`, `.cache/`
-- Create `.commentlinkingignore` file in project root to exclude additional files/directories
+- **Gitignore support**: Uses `.gitignore` patterns by default (disable via `commentLinking.useGitignore` setting)
+- **Custom exclusions**: Create `.commentlinkingignore` file in project root to exclude additional files/directories
+- **Priority**: `.commentlinkingignore` takes precedence over `.gitignore` patterns
 
 ### ✨ Features
 
@@ -142,7 +141,7 @@ To build and install the extension manually:
 - [ ] 🔄 Add functionality to disable new syntax if users want to use only legacy syntax
 - [ ] 🏷️ Add button in anchor tree to toggle between displaying anchor IDs and preview text
 - [ ] 🔍 Add support for displaying all links to a specific anchor in the editor
-- [ ] 📁 Add support for using `.gitignore` file as default exclusion file
+- [x] 📁 Add support for using `.gitignore` file as default exclusion file
 
 ---
 

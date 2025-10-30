@@ -65,7 +65,10 @@ export function activate(context: vscode.ExtensionContext) {
     "**/.commentlinkingignore"
   );
 
-  context.subscriptions.push(...watchers, ignoreWatcher);
+  const gitignoreWatcher =
+    vscode.workspace.createFileSystemWatcher("**/.gitignore");
+
+  context.subscriptions.push(...watchers, ignoreWatcher, gitignoreWatcher);
   for (const w of watchers) {
     context.subscriptions.push(
       w.onDidCreate(() => provider.rebuild()),
@@ -81,6 +84,13 @@ export function activate(context: vscode.ExtensionContext) {
     ignoreWatcher.onDidChange(() => provider.rebuild())
   );
 
+  // Rebuild when .gitignore changes (if gitignore support is enabled)
+  context.subscriptions.push(
+    gitignoreWatcher.onDidCreate(() => provider.rebuild()),
+    gitignoreWatcher.onDidDelete(() => provider.rebuild()),
+    gitignoreWatcher.onDidChange(() => provider.rebuild())
+  );
+
   registerCommentDecorations(context);
   registerMarkdownDecorations(context);
   registerCommentDocumentLinks(context);
@@ -90,7 +100,8 @@ export function activate(context: vscode.ExtensionContext) {
     vscode.workspace.onDidChangeConfiguration((e) => {
       if (
         e.affectsConfiguration("commentLinking.customFileTypes") ||
-        e.affectsConfiguration("commentLinking.enableLegacySyntax")
+        e.affectsConfiguration("commentLinking.enableLegacySyntax") ||
+        e.affectsConfiguration("commentLinking.useGitignore")
       ) {
         registerCommentDocumentLinks(context);
         registerMarkdownDocumentLinks(context);
