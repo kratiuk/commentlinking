@@ -122,7 +122,6 @@ export class AnchorsTreeDataProvider
       .filter(([, n]) => n > 1)
       .map(([id]) => id);
     this.handleDuplicateAnchors(duplicates);
-    anchorIndex.setProcessedFiles(files);
     anchorIndex.set(
       anchorItems.map((it) => ({
         anchorId: it.anchorId,
@@ -134,6 +133,8 @@ export class AnchorsTreeDataProvider
         selectionEndColumn: it.selectionEndColumn,
       }))
     );
+    // Set processed files AFTER set() to include all scanned files, not just those with anchors
+    anchorIndex.setProcessedFiles(files);
     this.refresh();
   }
 
