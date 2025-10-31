@@ -1,9 +1,13 @@
-**/.vscode/**
-**/.git/**
-**/.github/**
-**/*.ts
-**/*.tsbuildinfo
-src/**
-.gitignore
-tsconfig.json
-.vscodeignore
+# Exclude ALL files/folders by default
+**/*
+
+# Include ONLY these files/folders
+!out
+!out/**
+!resources
+!resources/**
+!package.json
+!CHANGELOG.md
+!README.md
+!LICENSE
+!LICENSE.txt

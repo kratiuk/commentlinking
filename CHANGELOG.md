@@ -1,3 +1,4 @@
-# Documentation
+# Project
 
-- Added clarification that links must be clicked while holding Ctrl/Cmd keys
+- Added new roadmap item: "Add and host comprehensive documentation"
+- Optimized extension package size by excluding unnecessary files from .vsix
