@@ -61,7 +61,7 @@ function checkForCyrillic() {
       process.exit(0);
     }
   } catch (error) {
-    console.error("\n\nError reading CHANGELOG.md:", error.message);
+    console.error("\n\nError reading CHANGELOG.md:", error.message, "\n");
     process.exit(1);
   }
 }
