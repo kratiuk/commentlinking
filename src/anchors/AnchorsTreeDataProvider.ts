@@ -72,6 +72,13 @@ export class AnchorsTreeDataProvider
       clearTimeout(this.rebuildTimer);
     }
 
+    // If not initialized yet, rebuild immediately
+    if (!this.isInitialized) {
+      await this.doRebuild();
+      return;
+    }
+
+    // Otherwise use debounced rebuild
     this.rebuildTimer = setTimeout(async () => {
       await this.doRebuild();
     }, 1000);

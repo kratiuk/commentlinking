@@ -2,7 +2,7 @@
   "name": "commentlinking",
   "displayName": "Comment Linking",
   "description": "🔗 Link between comments in code. Create anchors and jump to them from anywhere",
-  "version": "0.4.3",
+  "version": "0.5.0",
   "icon": "resources/icon.png",
   "author": {
     "name": "Viktor Kratiuk",
@@ -41,8 +41,7 @@
     "compile": "tsc -p ./",
     "watch": "tsc -watch -p ./",
     "package": "pnpm dlx vsce package",
-    "count": "cloc .vscode src scripts package.json",
-    "prepare": "husky"
+    "count": "cloc .vscode src scripts package.json, .github/workflows"
   },
   "contributes": {
     "configuration": {

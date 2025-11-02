@@ -43,7 +43,18 @@ export function isSupportedDocument(doc: vscode.TextDocument): boolean {
 export const SUPPORTED_EXTENSIONS: string[] = [
   "js",
   "ts",
+  "tsx",
+  "jsx",
   "py",
+  "rs",
+  "go",
+  "c",
+  "cpp",
+  "cxx",
+  "cc",
+  "hpp",
+  "h",
+  "cs",
   "json",
   "jsonc",
   "md",
@@ -66,18 +77,148 @@ export function isLegacySyntaxEnabled(): boolean {
   return config.get<boolean>("enableLegacySyntax", false);
 }
 
+export function isCommentLine(
+  doc: vscode.TextDocument,
+  lineNumber: number
+): boolean {
+  const text = doc.lineAt(lineNumber).text;
+  const trimmed = text.trim();
+  const fileName = doc.fileName;
+  const extension = fileName.split(".").pop() || "";
+  const commentType = getCommentTypeForExtension(extension);
+
+  // Get standard comment prefixes
+  const commentPrefixes = getCommentPrefixesForDocument(doc);
+
+  // Check standard comment prefixes
+  const hasStandardPrefix = commentPrefixes.some((prefix) =>
+    trimmed.startsWith(prefix)
+  );
+
+  if (hasStandardPrefix) return true;
+
+  // Special handling for Python docstrings
+  if (commentType === "python") {
+    // Check if we're inside a docstring
+    return isInsidePythonDocstring(doc, lineNumber);
+  }
+
+  return false;
+}
+
+function isInsidePythonDocstring(
+  doc: vscode.TextDocument,
+  lineNumber: number
+): boolean {
+  // Look backwards to find the start of a docstring
+  let docstringStart = -1;
+  let docstringQuotes = "";
+
+  for (let i = lineNumber; i >= 0; i--) {
+    const lineText = doc.lineAt(i).text;
+    const trimmed = lineText.trim();
+
+    // Check for docstring start patterns
+    if (trimmed.includes('"""') || trimmed.includes("'''")) {
+      const tripleDoubleIndex = lineText.indexOf('"""');
+      const tripleSingleIndex = lineText.indexOf("'''");
+
+      // Find which comes first (or only one exists)
+      let quoteIndex = -1;
+      let quotes = "";
+
+      if (
+        tripleDoubleIndex !== -1 &&
+        (tripleSingleIndex === -1 || tripleDoubleIndex < tripleSingleIndex)
+      ) {
+        quoteIndex = tripleDoubleIndex;
+        quotes = '"""';
+      } else if (tripleSingleIndex !== -1) {
+        quoteIndex = tripleSingleIndex;
+        quotes = "'''";
+      }
+
+      if (quoteIndex !== -1) {
+        // Check if this is an opening quote (not preceded by the same quotes)
+        const beforeQuotes = lineText.substring(0, quoteIndex);
+        if (!beforeQuotes.includes(quotes)) {
+          docstringStart = i;
+          docstringQuotes = quotes;
+          break;
+        }
+      }
+    }
+  }
+
+  if (docstringStart === -1) return false;
+
+  // Look forward from docstring start to find the end
+  for (let i = docstringStart; i < doc.lineCount; i++) {
+    const lineText = doc.lineAt(i).text;
+
+    // Skip the opening line if it only contains the opening quotes
+    if (i === docstringStart) {
+      const openingIndex = lineText.indexOf(docstringQuotes);
+      const afterOpening = lineText.substring(openingIndex + 3);
+
+      // If the line has closing quotes too (single-line docstring), check if target is on this line
+      if (afterOpening.includes(docstringQuotes)) {
+        return lineNumber === docstringStart;
+      }
+      continue;
+    }
+
+    // Look for closing quotes
+    if (lineText.includes(docstringQuotes)) {
+      // Found the end of docstring
+      return lineNumber <= i && lineNumber >= docstringStart;
+    }
+
+    // If we've passed our target line without finding the end, we're inside
+    if (i > lineNumber) {
+      return true;
+    }
+  }
+
+  return false;
+}
+
 export function getCommentTypeForExtension(
   extension: string
-): "js" | "python" | "json" | "markdown" | null {
-  if (["js", "ts", "json", "jsonc"].includes(extension)) return "js";
+):
+  | "js"
+  | "python"
+  | "rust"
+  | "go"
+  | "c"
+  | "cpp"
+  | "csharp"
+  | "json"
+  | "markdown"
+  | null {
+  if (["js", "ts", "tsx", "jsx", "json", "jsonc"].includes(extension))
+    return "js";
   if (extension === "py") return "python";
+  if (extension === "rs") return "rust";
+  if (extension === "go") return "go";
+  if (extension === "c") return "c";
+  if (["cpp", "cxx", "cc", "hpp", "h"].includes(extension)) return "cpp";
+  if (extension === "cs") return "csharp";
   if (extension === "md") return "markdown";
 
   const config = vscode.workspace.getConfiguration("commentLinking");
   const customTypes = config.get<Record<string, string>>("customFileTypes", {});
   const customType = customTypes[`.${extension}`] || customTypes[extension];
 
-  if (customType === "js" || customType === "python") {
+  if (
+    customType === "js" ||
+    customType === "python" ||
+    customType === "rust" ||
+    customType === "go" ||
+    customType === "c" ||
+    customType === "cpp" ||
+    customType === "csharp"
+  ) {
     return customType;
   }
 
@@ -94,9 +235,19 @@ export function getCommentPrefixesForDocument(
   switch (commentType) {
     case "js":
     case "json":
-      return ["//"];
+      return ["//", "/*", "*"];
     case "python":
       return ["#"];
+    case "rust":
+      return ["//", "/*", "*"];
+    case "go":
+      return ["//", "/*", "*"];
+    case "c":
+      return ["//", "/*", "*"];
+    case "cpp":
+      return ["//", "/*", "*"];
+    case "csharp":
+      return ["//", "/*", "*"];
     case "markdown":
       return [];
     default:
@@ -116,7 +267,7 @@ export function getDocumentSelectorsForLinks(): vscode.DocumentSelector {
 
 // Comments
 
-export const COMMENT_PREFIXES: string[] = ["//", "#"];
+export const COMMENT_PREFIXES: string[] = ["//", "#", "/*", "*"];
 
 export function isSupportedCommentLine(text: string): boolean {
   const trimmed = text.trim();
@@ -181,10 +332,10 @@ export function scanCommentMatches(
   for (let line = 0; line < doc.lineCount; line++) {
     const text = doc.lineAt(line).text;
     const trimmed = text.trim();
-    const isComment = commentPrefixes.some((prefix) =>
-      trimmed.startsWith(prefix)
-    );
-    if (!isComment) continue;
+
+    // Use new comment detection logic
+    if (!isCommentLine(doc, line)) continue;
+
     let match: RegExpExecArray | null;
     regex.lastIndex = 0;
     while ((match = regex.exec(text)) !== null) {
@@ -329,16 +480,12 @@ function scanBacklinkMatches(
   regex: RegExp,
   isLink: boolean = false
 ): CommentMatch[] {
-  const commentPrefixes = getCommentPrefixesForDocument(doc);
-
   const results: CommentMatch[] = [];
   for (let line = 0; line < doc.lineCount; line++) {
     const text = doc.lineAt(line).text;
-    const trimmed = text.trim();
-    const isComment = commentPrefixes.some((prefix) =>
-      trimmed.startsWith(prefix)
-    );
-    if (!isComment) continue;
+
+    // Use new comment detection logic
+    if (!isCommentLine(doc, line)) continue;
     let match: RegExpExecArray | null;
     regex.lastIndex = 0;
     while ((match = regex.exec(text)) !== null) {

@@ -8,14 +8,12 @@ import { anchorIndex } from "../anchors/anchorIndex";
 
 export function registerMarkdownDocumentLinks(
   context: vscode.ExtensionContext
-) {
+): vscode.Disposable {
   const provider: vscode.DocumentLinkProvider = {
     async provideDocumentLinks(
       document: vscode.TextDocument
     ): Promise<vscode.DocumentLink[]> {
       if (!document.fileName.endsWith(".md")) return [];
-
-      if (!anchorIndex.isFileProcessed(document.uri)) return [];
 
       const links: vscode.DocumentLink[] = [];
 
@@ -60,10 +58,12 @@ export function registerMarkdownDocumentLinks(
       return links;
     },
   };
-  context.subscriptions.push(
-    vscode.languages.registerDocumentLinkProvider(
-      { pattern: "**/*.md" },
-      provider
-    )
+
+  const disposable = vscode.languages.registerDocumentLinkProvider(
+    { pattern: "**/*.md" },
+    provider
   );
+
+  context.subscriptions.push(disposable);
+  return disposable;
 }

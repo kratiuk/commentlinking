@@ -1,0 +1,63 @@
+name: Publish to VS Code Marketplace
+
+on:
+  push:
+    branches: [master]
+
+jobs:
+  publish-to-marketplace:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2 # Need previous commit to compare
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: latest
+
+      - name: Check if version changed
+        id: version-check
+        run: |
+          # Get current version from package.json
+          CURRENT_VERSION=$(node -p "require('./package.json').version")
+
+          # Get previous version from package.json in previous commit
+          git show HEAD~1:package.json > previous-package.json
+          PREVIOUS_VERSION=$(node -p "require('./previous-package.json').version")
+
+          echo "Current version: $CURRENT_VERSION"
+          echo "Previous version: $PREVIOUS_VERSION"
+
+          if [ "$CURRENT_VERSION" != "$PREVIOUS_VERSION" ]; then
+            echo "Version changed from $PREVIOUS_VERSION to $CURRENT_VERSION"
+            echo "version-changed=true" >> $GITHUB_OUTPUT
+            echo "new-version=$CURRENT_VERSION" >> $GITHUB_OUTPUT
+          else
+            echo "Version not changed"
+            echo "version-changed=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Install dependencies
+        if: steps.version-check.outputs.version-changed == 'true'
+        run: pnpm install
+
+      - name: Build extension
+        if: steps.version-check.outputs.version-changed == 'true'
+        run: pnpm run compile
+
+      - name: Publish to VS Code Marketplace
+        if: steps.version-check.outputs.version-changed == 'true'
+        run: |
+          pnpm install -g @vscode/vsce
+          vsce publish
+        env:
+          VSCE_PAT: ${{ secrets.VSCE_PAT }}

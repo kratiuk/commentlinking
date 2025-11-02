@@ -9,14 +9,14 @@ import {
 import { anchorIndex } from "../anchors/anchorIndex";
 import messages from "../constants/messages";
 
-export function registerCommentDocumentLinks(context: vscode.ExtensionContext) {
+export function registerCommentDocumentLinks(
+  context: vscode.ExtensionContext
+): vscode.Disposable {
   const provider: vscode.DocumentLinkProvider = {
     async provideDocumentLinks(
       document: vscode.TextDocument
     ): Promise<vscode.DocumentLink[]> {
       if (!isSupportedDocument(document)) return [];
-
-      if (!anchorIndex.isFileProcessed(document.uri)) return [];
 
       const links: vscode.DocumentLink[] = [];
 
@@ -66,10 +66,11 @@ export function registerCommentDocumentLinks(context: vscode.ExtensionContext) {
     },
   };
 
-  context.subscriptions.push(
-    vscode.languages.registerDocumentLinkProvider(
-      getDocumentSelectorsForLinks(),
-      provider
-    )
+  const disposable = vscode.languages.registerDocumentLinkProvider(
+    getDocumentSelectorsForLinks(),
+    provider
   );
+
+  context.subscriptions.push(disposable);
+  return disposable;
 }

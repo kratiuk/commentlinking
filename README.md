@@ -67,7 +67,14 @@
 
 - `JavaScript` (.js)
 - `TypeScript` (.ts)
+- `TypeScript React` (.tsx)
+- `JavaScript React` (.jsx)
 - `Python` (.py)
+- `Rust` (.rs)
+- `Go` (.go)
+- `C` (.c)
+- `C++` (.cpp, .cxx, .cc, .hpp, .h)
+- `C#` (.cs)
 - `JSON` (.json)
 - `JSON With Comments` (.jsonc)
 - `Markdown` (.md) - full text support with special syntax
@@ -82,7 +89,6 @@ You can extend support to any file type by configuring custom comment syntax in 
 {
   "commentLinking.customFileTypes": {
     ".vue": "js",
-    ".go": "js",
     ".sh": "python"
     // Other extensions you want to add support for
   }
@@ -131,17 +137,17 @@ To build and install the extension manually:
 
 ### ✅ Roadmap / To‑Do
 
-- [ ] 🧵 Support multiline comments (block and triple-quote styles)
 - [ ] 📖 Create Markdown preview with link and anchor support
 - [ ] 🔗 Add support for creating anchors and links without preview text in backlinks
 - [ ] 🔀 Add sorting by line numbers in anchor tree view
-- [ ] 🌐 Add more languages (e.g., `Go`, `Rust`) and support `.jsx/.tsx`
 - [ ] ⚙️ Add support for custom comment types for specific files
 - [ ] 🎨 Add functionality to configure anchor and link styles
 - [ ] 🔄 Add functionality to disable new syntax if users want to use only legacy syntax
 - [ ] 🏷️ Add button in anchor tree to toggle between displaying anchor IDs and preview text
 - [ ] 🔍 Add support for displaying all links to a specific anchor in the editor
 - [ ] 📚 Add and host comprehensive documentation
+- [x] 🧵 Support multiline comments (block and triple-quote styles)
+- [x] 🌐 Add more languages (e.g., `Go`, `Rust`) and support `.jsx/.tsx`
 - [x] 📁 Add support for using `.gitignore` file as default exclusion file
 
 ---
