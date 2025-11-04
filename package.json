@@ -41,7 +41,7 @@
     "compile": "tsc -p ./",
     "watch": "tsc -watch -p ./",
     "package": "pnpm dlx vsce package",
-    "count": "cloc .vscode src scripts package.json, .github/workflows"
+    "count": "cloc .vscode src scripts package.json .github/workflows"
   },
   "contributes": {
     "configuration": {
