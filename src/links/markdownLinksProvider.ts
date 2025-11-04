@@ -4,7 +4,7 @@ import {
   scanMarkdownLinkMatches,
   scanMarkdownBacklinkLinkMatches,
 } from "../utils/helpers";
-import { anchorIndex } from "../anchors/anchorIndex";
+import { anchorIndex } from "../anchors/AnchorIndex";
 
 export function registerMarkdownDocumentLinks(
   context: vscode.ExtensionContext

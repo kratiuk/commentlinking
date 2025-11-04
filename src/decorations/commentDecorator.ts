@@ -4,7 +4,7 @@ import {
   getSuppressDecorationOnJump,
   clearSuppressDecorationOnJump,
 } from "../utils/helpers";
-import { anchorIndex } from "../anchors/anchorIndex";
+import { anchorIndex } from "../anchors/AnchorIndex";
 import { isSupportedDocument } from "../utils/helpers";
 import { createDecorationTypes } from "./styles";
 import { buildDecorationRanges } from "./buildRanges";

@@ -1,21 +1,26 @@
 import * as vscode from "vscode";
 
-import { anchorIndex } from "./anchors/anchorIndex";
+import { anchorIndex } from "./anchors/AnchorIndex";
 import { AnchorsTreeDataProvider } from "./anchors/AnchorsTreeDataProvider";
-import { AnchorTreeItem } from "./tree/AnchorTreeItem";
-import { isSupportedDocument, getSupportedGlobPatterns } from "./utils/helpers";
+import messages from "./constants/messages";
 import {
   registerCommentDecorations,
   refreshDecorationsNow,
 } from "./decorations/commentDecorator";
 import { registerMarkdownDecorations } from "./decorations/markdownDecorator";
 import { registerCommentDocumentLinks } from "./links/commentLinkingProvider";
-import { setSuppressDecorationOnJump } from "./utils/helpers";
 import { registerMarkdownDocumentLinks } from "./links/markdownLinksProvider";
+import { AnchorTreeItem } from "./tree/AnchorTreeItem";
+import {
+  isSupportedDocument,
+  getSupportedGlobPatterns,
+  setSuppressDecorationOnJump,
+} from "./utils/helpers";
+import { kickoff } from "./utils/initialization";
 
-import messages from "./constants/messages";
-
+// Main extension activation function that initializes all components
 export function activate(context: vscode.ExtensionContext) {
+  // Create and register main indexing provider
   const provider = new AnchorsTreeDataProvider(context);
   vscode.window.registerTreeDataProvider("commentlinking.anchors", provider);
 
@@ -38,28 +43,15 @@ export function activate(context: vscode.ExtensionContext) {
     markdownLinkDisposable = registerMarkdownDocumentLinks(context);
   };
 
-  // Helper function to rebuild and refresh document links
-  const rebuildAndRefreshLinks = async () => {
-    await provider.rebuild();
-    // Re-register link providers to force VS Code to clear cache
-    registerLinkProviders();
-  };
-
-  const kickoff = async () => {
-    // Ignore all errors to prevent extension from failing
-    try {
-      await rebuildAndRefreshLinks();
-    } catch {}
-  };
-
   if (
     vscode.workspace.workspaceFolders &&
     vscode.workspace.workspaceFolders.length > 0
   ) {
-    kickoff();
+    // Start initial indexing when workspace is ready
+    kickoff(provider);
   } else {
     const sub = vscode.workspace.onDidChangeWorkspaceFolders(() => {
-      kickoff();
+      kickoff(provider);
       sub.dispose();
     });
     context.subscriptions.push(sub);
@@ -78,7 +70,7 @@ export function activate(context: vscode.ExtensionContext) {
   context.subscriptions.push(
     vscode.workspace.onDidChangeTextDocument(async (e) => {
       if (!isSupportedDocument(e.document)) return;
-      await rebuildAndRefreshLinks();
+      await provider.debouncedRebuild();
     })
   );
 
@@ -97,24 +89,24 @@ export function activate(context: vscode.ExtensionContext) {
   context.subscriptions.push(...watchers, ignoreWatcher, gitignoreWatcher);
   for (const w of watchers) {
     context.subscriptions.push(
-      w.onDidCreate(() => rebuildAndRefreshLinks()),
-      w.onDidDelete(() => rebuildAndRefreshLinks()),
-      w.onDidChange(() => rebuildAndRefreshLinks())
+      w.onDidCreate(() => provider.debouncedRebuild()),
+      w.onDidDelete(() => provider.debouncedRebuild()),
+      w.onDidChange(() => provider.debouncedRebuild())
     );
   }
 
   // Rebuild when .commentlinkingignore changes
   context.subscriptions.push(
-    ignoreWatcher.onDidCreate(() => rebuildAndRefreshLinks()),
-    ignoreWatcher.onDidDelete(() => rebuildAndRefreshLinks()),
-    ignoreWatcher.onDidChange(() => rebuildAndRefreshLinks())
+    ignoreWatcher.onDidCreate(() => provider.debouncedRebuild()),
+    ignoreWatcher.onDidDelete(() => provider.debouncedRebuild()),
+    ignoreWatcher.onDidChange(() => provider.debouncedRebuild())
   );
 
   // Rebuild when .gitignore changes (if gitignore support is enabled)
   context.subscriptions.push(
-    gitignoreWatcher.onDidCreate(() => rebuildAndRefreshLinks()),
-    gitignoreWatcher.onDidDelete(() => rebuildAndRefreshLinks()),
-    gitignoreWatcher.onDidChange(() => rebuildAndRefreshLinks())
+    gitignoreWatcher.onDidCreate(() => provider.debouncedRebuild()),
+    gitignoreWatcher.onDidDelete(() => provider.debouncedRebuild()),
+    gitignoreWatcher.onDidChange(() => provider.debouncedRebuild())
   );
 
   registerCommentDecorations(context);
@@ -130,7 +122,7 @@ export function activate(context: vscode.ExtensionContext) {
         e.affectsConfiguration("commentLinking.enableLegacySyntax") ||
         e.affectsConfiguration("commentLinking.useGitignore")
       ) {
-        rebuildAndRefreshLinks();
+        provider.debouncedRebuild();
         refreshDecorationsNow();
       }
     })

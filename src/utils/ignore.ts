@@ -1,41 +1,22 @@
 import * as vscode from "vscode";
 
 /**
- * Filters an array of files, removing those that should be ignored
+ * Gets ignore patterns to be used as exclude parameter in vscode.workspace.findFiles()
  */
-export async function filterIgnoredFiles(
-  files: vscode.Uri[]
-): Promise<vscode.Uri[]> {
+export async function getIgnorePatterns(): Promise<string> {
   const ignorePatterns = await readIgnoreFiles();
   if (ignorePatterns.length === 0) {
-    return files;
+    return "";
   }
-
-  // Helper function to convert glob pattern to regex
-  const patternToRegex = (pattern: string): RegExp => {
-    const regexPattern = pattern
-      .replace(/\./g, "\\.")
-      .replace(/\*/g, ".*")
-      .replace(/\//g, "\\/");
-    return new RegExp(
-      `^${regexPattern}$|/${regexPattern}$|^${regexPattern}/|/${regexPattern}/`
-    );
-  };
-
-  return files.filter((uri) => {
-    const relativePath = vscode.workspace.asRelativePath(uri);
-    return !ignorePatterns.some((pattern: string) => {
-      const regex = patternToRegex(pattern);
-      return regex.test(relativePath);
-    });
-  });
+  // Convert patterns to VS Code exclude format
+  return `{${ignorePatterns.join(",")}}`;
 }
 
 /**
  * Reads both .gitignore (if enabled) and .commentlinkingignore files.
  * .commentlinkingignore takes precedence over .gitignore patterns.
  */
-async function readIgnoreFiles(): Promise<string[]> {
+export async function readIgnoreFiles(): Promise<string[]> {
   const workspaceFolders = vscode.workspace.workspaceFolders;
   if (!workspaceFolders || workspaceFolders.length === 0) {
     return [];

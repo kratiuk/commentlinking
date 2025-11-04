@@ -1,31 +1,17 @@
 import * as vscode from "vscode";
-import messages from "../constants/messages";
 
-import { anchorIndex } from "./anchorIndex";
+import { anchorIndex } from "./AnchorIndex";
+import messages from "../constants/messages";
 import { AnchorTreeItem } from "../tree/AnchorTreeItem";
 import { FileTreeItem } from "../tree/FileTreeItem";
-import { findAllSupportedFiles } from "../utils/helpers";
 import {
-  scanAnchorMatches,
-  scanMarkdownAnchorMatches,
-  scanBacklinkAnchorMatches,
-  scanMarkdownBacklinkAnchorMatches,
+  findAllSupportedFiles,
+  scanUniversalAnchorMatches,
+  scanUniversalBacklinkAnchorMatches,
 } from "../utils/helpers";
 
-declare function setInterval(
-  handler: (...args: any[]) => void,
-  timeout?: number,
-  ...args: any[]
-): any;
-declare function clearInterval(handle: any): void;
-declare function setTimeout(
-  handler: (...args: any[]) => void,
-  timeout?: number,
-  ...args: any[]
-): any;
-declare function clearTimeout(handle: any): void;
-
-type TreeNode = FileTreeItem | AnchorTreeItem;
+import { TreeNode } from "../constants/types";
+import "../constants/types"; // Global timer function declarations
 
 export class AnchorsTreeDataProvider
   implements vscode.TreeDataProvider<TreeNode>
@@ -34,89 +20,114 @@ export class AnchorsTreeDataProvider
   readonly onDidChangeTreeData: vscode.Event<void> =
     this.onDidChangeTreeDataEmitter.event;
 
+  // Main data storage
   private cachedAnchorItems: AnchorTreeItem[] = [];
   private roots: FileTreeItem[] = [];
+
+  // State tracking
   private isInitialized = false;
-  private duplicateNotifier: any;
   private currentDuplicateIds: string[] = [];
-  private outputChannel = vscode.window.createOutputChannel("Comment Linking");
+
+  // Timers and utilities
   private rebuildTimer: any;
+  private duplicateNotifier: any;
+  private outputChannel = vscode.window.createOutputChannel("Comment Linking");
 
   constructor(private readonly context: vscode.ExtensionContext) {}
 
-  refresh() {
-    this.onDidChangeTreeDataEmitter.fire();
-  }
-
-  getTreeItem(element: TreeNode): vscode.TreeItem {
-    return element;
-  }
-
-  async getChildren(element?: TreeNode): Promise<TreeNode[]> {
-    if (!this.isInitialized) {
-      await this.rebuild();
-      this.isInitialized = true;
-    }
-    if (!element) return this.roots;
-    if (element instanceof FileTreeItem) {
-      const fileAnchors = this.cachedAnchorItems.filter(
-        (a) => a.fileUri.toString() === element.fileUri.toString()
-      );
-      return fileAnchors;
-    }
-    return [];
-  }
-
-  async rebuild() {
+  /**
+   * Main indexing trigger with debouncing logic
+   *
+   * Controls when extension rebuilds anchor index:
+   * - First time: rebuilds immediately
+   * - Subsequent calls: delays 2000ms, canceling previous timers
+   */
+  async debouncedRebuild() {
     if (this.rebuildTimer) {
       clearTimeout(this.rebuildTimer);
     }
-
     // If not initialized yet, rebuild immediately
     if (!this.isInitialized) {
-      await this.doRebuild();
+      await this.rebuild();
       return;
     }
-
     // Otherwise use debounced rebuild
     this.rebuildTimer = setTimeout(async () => {
-      await this.doRebuild();
-    }, 1000);
+      // rebuild() does the real indexing work
+      await this.rebuild();
+    }, 2000);
   }
 
-  private async doRebuild() {
+  /**
+   * Actual indexing work - scans all files and rebuilds anchor index
+   * This is the heavy operation that handles duplicate detection and UI updates
+   */
+  private async rebuild() {
+    // Start timing the indexing process
+    const startTime = Date.now();
+
+    // Log indexing start time
     const time = new Date().toLocaleTimeString("en-US", { hour12: false });
-    this.outputChannel.appendLine(`🗂️ Indexing started at ${time}`);
+    this.outputChannel.appendLine(
+      messages.indexingStarted.replace("{time}", time)
+    );
 
     const anchorItems: AnchorTreeItem[] = [];
+
     // Mass file ignoring during indexing happens here
     const files = await findAllSupportedFiles();
 
-    this.outputChannel.appendLine(`📁 Found ${files.length} files to scan`);
+    // Log filtered files count (after gitignore and commentlinkingignore filtering)
+    this.outputChannel.appendLine(""); // Empty line before
+    this.outputChannel.appendLine(
+      messages.foundFilesToScan.replace("{count}", files.length.toString())
+    );
     files.forEach((file) => {
       this.outputChannel.appendLine(
         `  - ${vscode.workspace.asRelativePath(file)}`
       );
     });
+    this.outputChannel.appendLine(""); // Empty line after
 
+    // Process each file: open, extract anchors, collect results
     for (const file of files) {
       try {
+        // Log start of processing
+        this.outputChannel.append(
+          messages.processingFile.replace(
+            "{file}",
+            vscode.workspace.asRelativePath(file)
+          )
+        );
+
         const doc = await vscode.workspace.openTextDocument(file);
+        // Extract anchors from each document
         const anchors = this.extractAnchorsFromDocument(doc);
         anchorItems.push(...anchors);
+
+        // Append result to the same line
+        this.outputChannel.appendLine(
+          messages.foundAnchorsInFile.replace(
+            "{count}",
+            anchors.length.toString()
+          )
+        );
       } catch {}
     }
 
     this.cachedAnchorItems = anchorItems.sort((a, b) =>
       a.anchorId.localeCompare(b.anchorId)
     );
+
     const byFile = new Map<string, { uri: vscode.Uri; count: number }>();
+
     for (const it of this.cachedAnchorItems) {
       const key = it.fileUri.toString();
       const prev = byFile.get(key) ?? { uri: it.fileUri, count: 0 };
       prev.count += 1;
       byFile.set(key, prev);
     }
+
     this.roots = Array.from(byFile.values())
       .map((v) => new FileTreeItem(v.uri, v.count))
       .sort((a, b) => a.label!.toString().localeCompare(b.label!.toString()));
@@ -125,9 +136,11 @@ export class AnchorsTreeDataProvider
     for (const it of this.cachedAnchorItems) {
       counts.set(it.anchorId, (counts.get(it.anchorId) ?? 0) + 1);
     }
+
     const duplicates = Array.from(counts.entries())
       .filter(([, n]) => n > 1)
       .map(([id]) => id);
+
     this.handleDuplicateAnchors(duplicates);
     anchorIndex.set(
       anchorItems.map((it) => ({
@@ -140,9 +153,87 @@ export class AnchorsTreeDataProvider
         selectionEndColumn: it.selectionEndColumn,
       }))
     );
+
     // Set processed files AFTER set() to include all scanned files, not just those with anchors
     anchorIndex.setProcessedFiles(files);
     this.refresh();
+
+    // Mark as initialized for debouncing logic
+    this.isInitialized = true;
+
+    // Log completion time
+    const endTime = Date.now();
+    const duration = endTime - startTime;
+    this.outputChannel.appendLine(""); // Empty line before completion message
+    this.outputChannel.appendLine(
+      messages.indexingCompleted.replace("{duration}", duration.toString())
+    );
+    this.outputChannel.appendLine(""); // Empty line after completion message
+  }
+
+  /**
+   * Extracts anchor objects from a single document.
+   * Handles both regular files (anchors in comments) and markdown files (anchors in text).
+   */
+  private extractAnchorsFromDocument(
+    doc: vscode.TextDocument
+  ): AnchorTreeItem[] {
+    const results: AnchorTreeItem[] = [];
+
+    const matches = scanUniversalAnchorMatches(doc);
+    for (const m of matches) {
+      results.push(
+        new AnchorTreeItem(
+          m.anchorId,
+          doc.uri,
+          m.lineNumber,
+          m.preview,
+          m.columnStart,
+          m.selectionStartColumn,
+          m.selectionEndColumn
+        )
+      );
+    }
+
+    const backlinkMatches = scanUniversalBacklinkAnchorMatches(doc);
+    for (const m of backlinkMatches) {
+      results.push(
+        new AnchorTreeItem(
+          m.anchorId,
+          doc.uri,
+          m.lineNumber,
+          m.preview,
+          m.columnStart,
+          m.selectionStartColumn,
+          m.selectionEndColumn
+        )
+      );
+    }
+
+    return results;
+  }
+
+  refresh() {
+    this.onDidChangeTreeDataEmitter.fire();
+  }
+
+  getTreeItem(element: TreeNode): vscode.TreeItem {
+    return element;
+  }
+
+  async getChildren(element?: TreeNode): Promise<TreeNode[]> {
+    if (!this.isInitialized) {
+      await this.debouncedRebuild();
+      this.isInitialized = true;
+    }
+    if (!element) return this.roots;
+    if (element instanceof FileTreeItem) {
+      const fileAnchors = this.cachedAnchorItems.filter(
+        (a) => a.fileUri.toString() === element.fileUri.toString()
+      );
+      return fileAnchors;
+    }
+    return [];
   }
 
   private handleDuplicateAnchors(duplicates: string[]) {
@@ -180,48 +271,5 @@ export class AnchorsTreeDataProvider
       clearInterval(this.duplicateNotifier);
       this.duplicateNotifier = undefined;
     }
-  }
-
-  private extractAnchorsFromDocument(
-    doc: vscode.TextDocument
-  ): AnchorTreeItem[] {
-    const results: AnchorTreeItem[] = [];
-    const isMd = doc.fileName.endsWith(".md");
-
-    const matches = isMd
-      ? scanMarkdownAnchorMatches(doc)
-      : scanAnchorMatches(doc);
-    for (const m of matches) {
-      results.push(
-        new AnchorTreeItem(
-          m.anchorId,
-          doc.uri,
-          m.lineNumber,
-          m.preview,
-          m.columnStart,
-          m.selectionStartColumn,
-          m.selectionEndColumn
-        )
-      );
-    }
-
-    const backlinkMatches = isMd
-      ? scanMarkdownBacklinkAnchorMatches(doc)
-      : scanBacklinkAnchorMatches(doc);
-    for (const m of backlinkMatches) {
-      results.push(
-        new AnchorTreeItem(
-          m.anchorId,
-          doc.uri,
-          m.lineNumber,
-          m.preview,
-          m.columnStart,
-          m.selectionStartColumn,
-          m.selectionEndColumn
-        )
-      );
-    }
-
-    return results;
   }
 }

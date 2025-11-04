@@ -119,7 +119,15 @@ You can extend support to any file type by configuring custom comment syntax in 
 ### 📦 Installation
 
 1. Install the extension
-2. Reload `VS Code` window (you’ll be prompted on first install)
+2. Reload `VS Code` window (you'll be prompted on first install)
+
+### 📊 Debugging & Logging
+
+To view detailed indexing logs and performance information:
+
+1. Open VS Code Output panel (`View > Output`)
+2. Select "Comment Linking" from the dropdown
+3. Watch real-time indexing progress and timing information
 
 ### 🧪 Development & Testing
 

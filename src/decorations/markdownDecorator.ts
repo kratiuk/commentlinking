@@ -3,7 +3,7 @@ import {
   getSuppressDecorationOnJump,
   clearSuppressDecorationOnJump,
 } from "../utils/helpers";
-import { anchorIndex } from "../anchors/anchorIndex";
+import { anchorIndex } from "../anchors/AnchorIndex";
 import {
   scanMarkdownAnchorMatches,
   scanMarkdownLinkMatches,

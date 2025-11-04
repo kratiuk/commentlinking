@@ -1,25 +1,28 @@
 import * as vscode from "vscode";
-import { filterIgnoredFiles } from "./ignore";
+import { getIgnorePatterns } from "./ignore";
 
 // Files
 
 // Function that finds all supported files in workspace and applies ignore patterns
 export async function findAllSupportedFiles(): Promise<vscode.Uri[]> {
-  const patterns = getSupportedGlobPatterns();
+  // First, get ignore patterns for exclude parameter
+  const excludePattern = await getIgnorePatterns();
 
+  const patterns = getSupportedGlobPatterns();
   let allFiles: vscode.Uri[] = [];
 
+  // Use exclude parameter to filter files during search
   const lists = await Promise.all(
-    patterns.map((p) => vscode.workspace.findFiles(p))
+    patterns.map((p) =>
+      vscode.workspace.findFiles(p, excludePattern || undefined)
+    )
   );
+
   for (const arr of lists) {
     allFiles.push(...arr);
   }
 
-  // Apply ignore patterns
-  allFiles = await filterIgnoredFiles(allFiles);
-
-  // Remove duplicates
+  // Remove duplicates only (no more manual filtering needed)
   const seen = new Set<string>();
   const result: vscode.Uri[] = [];
   for (const uri of allFiles) {
@@ -369,6 +372,23 @@ export function scanAnchorMatches(doc: vscode.TextDocument): CommentMatch[] {
   return scanCommentMatches(doc, ANCHOR_LINK_REGEX);
 }
 
+/**
+ * Universal function to scan anchors from any document type
+ */
+export function scanUniversalAnchorMatches(
+  doc: vscode.TextDocument
+): CommentMatch[] {
+  if (!isLegacySyntaxEnabled()) return [];
+
+  const isMarkdown = doc.fileName.endsWith(".md");
+
+  if (isMarkdown) {
+    return scanAllLineMatches(doc, MARKDOWN_ANCHOR_REGEX);
+  } else {
+    return scanCommentMatches(doc, ANCHOR_LINK_REGEX);
+  }
+}
+
 export function scanPlainLinkMatches(doc: vscode.TextDocument): CommentMatch[] {
   if (!isLegacySyntaxEnabled()) return [];
   return scanCommentMatches(doc, PLAIN_LINK_REGEX);
@@ -521,6 +541,21 @@ export function scanBacklinkAnchorMatches(
   doc: vscode.TextDocument
 ): CommentMatch[] {
   return scanBacklinkMatches(doc, BACKLINK_ANCHOR_REGEX, false);
+}
+
+/**
+ * Universal function to scan backlink anchors from any document type
+ */
+export function scanUniversalBacklinkAnchorMatches(
+  doc: vscode.TextDocument
+): CommentMatch[] {
+  const isMarkdown = doc.fileName.endsWith(".md");
+
+  if (isMarkdown) {
+    return scanMarkdownBacklinkAnchorMatches(doc);
+  } else {
+    return scanBacklinkAnchorMatches(doc);
+  }
 }
 
 export function scanBacklinkLinkMatches(

@@ -6,7 +6,7 @@ import {
   scanPlainLinkMatches,
   scanBacklinkLinkMatches,
 } from "../utils/helpers";
-import { anchorIndex } from "../anchors/anchorIndex";
+import { anchorIndex } from "../anchors/AnchorIndex";
 import messages from "../constants/messages";
 
 export function registerCommentDocumentLinks(
