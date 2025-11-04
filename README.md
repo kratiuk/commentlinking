@@ -77,7 +77,7 @@
 - `C#` (.cs)
 - `JSON` (.json)
 - `JSON With Comments` (.jsonc)
-- `Markdown` (.md) - full text support with special syntax
+- `Markdown` (.md) - full text support (legacy syntax requires special format)
 
 ### ⚙️ Custom File Types
 
