@@ -121,8 +121,8 @@
     }
   },
   "devDependencies": {
-    "@types/vscode": "^1.75.0",
+    "@types/vscode": "^1.105.0",
     "husky": "^9.1.7",
-    "typescript": "^5.4.0"
+    "typescript": "^5.9.3"
   }
 }
