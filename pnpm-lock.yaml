@@ -9,7 +9,7 @@ importers:
   .:
     devDependencies:
       '@types/vscode':
-        specifier: ^1.105.0
+        specifier: ^1.80.0
         version: 1.105.0
       husky:
         specifier: ^9.1.7

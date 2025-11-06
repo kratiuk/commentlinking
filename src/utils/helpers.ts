@@ -238,6 +238,9 @@ export function getCommentPrefixesForDocument(
   switch (commentType) {
     case "js":
     case "json":
+      if (extension === "tsx" || extension === "jsx") {
+        return ["//", "/*", "*", "{/*"];
+      }
       return ["//", "/*", "*"];
     case "python":
       return ["#"];
@@ -270,7 +273,7 @@ export function getDocumentSelectorsForLinks(): vscode.DocumentSelector {
 
 // Comments
 
-export const COMMENT_PREFIXES: string[] = ["//", "#", "/*", "*"];
+export const COMMENT_PREFIXES: string[] = ["//", "#", "/*", "*", "{/*"];
 
 export function isSupportedCommentLine(text: string): boolean {
   const trimmed = text.trim();

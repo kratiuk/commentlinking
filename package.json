@@ -2,7 +2,7 @@
   "name": "commentlinking",
   "displayName": "Comment Linking",
   "description": "🔗 Link between comments in code. Create anchors and jump to them from anywhere",
-  "version": "0.5.1",
+  "version": "0.5.2",
   "icon": "resources/icon.png",
   "author": {
     "name": "Viktor Kratiuk",
@@ -12,7 +12,7 @@
   "main": "./out/extension.js",
   "publisher": "kratiuk",
   "engines": {
-    "vscode": "^1.75.0"
+    "vscode": "^1.80.0"
   },
   "categories": [
     "Programming Languages",
@@ -121,7 +121,7 @@
     }
   },
   "devDependencies": {
-    "@types/vscode": "^1.105.0",
+    "@types/vscode": "^1.80.0",
     "husky": "^9.1.7",
     "typescript": "^5.9.3"
   }
