@@ -8,8 +8,16 @@ export async function getIgnorePatterns(): Promise<string> {
   if (ignorePatterns.length === 0) {
     return "";
   }
+  // Normalize gitignore patterns to VS Code glob format
+  const normalizedPatterns = ignorePatterns.flatMap(normalizePattern);
+
+  // If only one pattern, return it directly; otherwise wrap in braces
+  if (normalizedPatterns.length === 1) {
+    return normalizedPatterns[0];
+  }
+
   // Convert patterns to VS Code exclude format
-  return `{${ignorePatterns.join(",")}}`;
+  return `{${normalizedPatterns.join(",")}}`;
 }
 
 /**
@@ -59,4 +67,27 @@ export async function readIgnoreFiles(): Promise<string[]> {
   }
 
   return ignorePatterns;
+}
+
+/**
+ * [[NormalizeGitignore23456|Converts gitignore pattern to VS Code glob pattern]]
+ * Handles:
+ * - /pattern -> pattern (root-relative)
+ * - pattern/ -> pattern, star-star/pattern (directory pattern)
+ * - pattern -> star-star/pattern (match anywhere)
+ */
+function normalizePattern(pattern: string): string[] {
+  // Remove leading slash (gitignore: /test -> vscode: test)
+  if (pattern.startsWith("/")) {
+    return [pattern.slice(1)];
+  }
+
+  // Remove trailing slash and match as directory (gitignore: test/ -> vscode: test, **/test)
+  if (pattern.endsWith("/")) {
+    const dirPattern = pattern.slice(0, -1);
+    return [dirPattern, `**/${dirPattern}`];
+  }
+
+  // Match anywhere (gitignore: test -> vscode: **/test)
+  return [`**/${pattern}`];
 }
