@@ -1,3 +1,8 @@
-## 🐛 Bug Fixes
+## ✨ Features
 
-- Fixed bug where `.gitignore/.commentlinkingignore` patterns with leading slash (`/test`) or trailing slash (`test/`) were not properly ignored, causing some folders to be unexpectedly scanned
+- Added support for Java (`.java`)
+- Added support for Kotlin (`.kt`, `.kts`)
+- Added support for Swift (`.swift`)
+- Added support for PHP (`.php`)
+- Added support for Shell scripts (`.sh`, `.bash`, `.zsh`)
+- Added support for YAML (`.yaml`, `.yml`)

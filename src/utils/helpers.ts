@@ -58,6 +58,16 @@ export const SUPPORTED_EXTENSIONS: string[] = [
   "hpp",
   "h",
   "cs",
+  "java",
+  "kt",
+  "kts",
+  "swift",
+  "php",
+  "sh",
+  "bash",
+  "zsh",
+  "yaml",
+  "yml",
   "json",
   "jsonc",
   "md",
@@ -196,6 +206,12 @@ export function getCommentTypeForExtension(
   | "c"
   | "cpp"
   | "csharp"
+  | "java"
+  | "kotlin"
+  | "swift"
+  | "php"
+  | "shell"
+  | "yaml"
   | "json"
   | "markdown"
   | null {
@@ -207,6 +223,12 @@ export function getCommentTypeForExtension(
   if (extension === "c") return "c";
   if (["cpp", "cxx", "cc", "hpp", "h"].includes(extension)) return "cpp";
   if (extension === "cs") return "csharp";
+  if (extension === "java") return "java";
+  if (["kt", "kts"].includes(extension)) return "kotlin";
+  if (extension === "swift") return "swift";
+  if (extension === "php") return "php";
+  if (["sh", "bash", "zsh"].includes(extension)) return "shell";
+  if (["yaml", "yml"].includes(extension)) return "yaml";
   if (extension === "md") return "markdown";
 
   const config = vscode.workspace.getConfiguration("commentLinking");
@@ -220,7 +242,13 @@ export function getCommentTypeForExtension(
     customType === "go" ||
     customType === "c" ||
     customType === "cpp" ||
-    customType === "csharp"
+    customType === "csharp" ||
+    customType === "java" ||
+    customType === "kotlin" ||
+    customType === "swift" ||
+    customType === "php" ||
+    customType === "shell" ||
+    customType === "yaml"
   ) {
     return customType;
   }
@@ -254,6 +282,18 @@ export function getCommentPrefixesForDocument(
       return ["//", "/*", "*"];
     case "csharp":
       return ["//", "/*", "*"];
+    case "java":
+      return ["//", "/*", "*"];
+    case "kotlin":
+      return ["//", "/*", "*"];
+    case "swift":
+      return ["//", "/*", "*"];
+    case "php":
+      return ["//", "/*", "*", "#"];
+    case "shell":
+      return ["#"];
+    case "yaml":
+      return ["#"];
     case "markdown":
       return [];
     default:
