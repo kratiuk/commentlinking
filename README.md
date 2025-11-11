@@ -95,7 +95,6 @@ You can extend support to any file type by configuring custom comment syntax in 
 {
   "commentLinking.customFileTypes": {
     ".vue": "js",
-    ".sh": "python"
     // Other extensions you want to add support for
   }
 }
