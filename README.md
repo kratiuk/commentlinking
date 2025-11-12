@@ -65,25 +65,35 @@
 
 ### ✅ Supported languages and file formats
 
-- `JavaScript` (.js)
-- `TypeScript` (.ts)
-- `TypeScript React` (.tsx)
-- `JavaScript React` (.jsx)
-- `Python` (.py)
-- `Rust` (.rs)
-- `Go` (.go)
 - `C` (.c)
-- `C++` (.cpp, .cxx, .cc, .hpp, .h)
 - `C#` (.cs)
+- `C++` (.cpp, .cxx, .cc, .hpp, .h)
+- `CSS` (.css, .scss, .sass, .less)
+- `Dockerfile` (Dockerfile, dockerfile, Dockerfile.\*)
+- `Go` (.go)
+- `HTML` (.html, .htm)
 - `Java` (.java)
-- `Kotlin` (.kt, .kts)
-- `Swift` (.swift)
-- `PHP` (.php)
-- `Shell` (.sh, .bash, .zsh)
-- `YAML` (.yaml, .yml)
+- `JavaScript` (.js)
+- `JavaScript React` (.jsx)
 - `JSON` (.json)
 - `JSON With Comments` (.jsonc)
+- `Kotlin` (.kt, .kts)
+- `Makefile` (Makefile, makefile, .mk)
 - `Markdown` (.md) - full text support (legacy syntax requires special format)
+- `PHP` (.php)
+- `PowerShell` (.ps1, .psm1, .psd1)
+- `Python` (.py)
+- `Ruby` (.rb)
+- `Rust` (.rs)
+- `Shell` (.sh, .bash, .zsh)
+- `Svelte` (.svelte)
+- `Swift` (.swift)
+- `TOML` (.toml)
+- `TypeScript` (.ts)
+- `TypeScript React` (.tsx)
+- `Vue` (.vue)
+- `XML` (.xml)
+- `YAML` (.yaml, .yml)
 
 ### ⚙️ Custom File Types
 
@@ -94,7 +104,7 @@ You can extend support to any file type by configuring custom comment syntax in 
 ```json
 {
   "commentLinking.customFileTypes": {
-    ".vue": "js",
+    ".dart": "js"
     // Other extensions you want to add support for
   }
 }

@@ -38,6 +38,23 @@ export async function findAllSupportedFiles(): Promise<vscode.Uri[]> {
 
 export function isSupportedDocument(doc: vscode.TextDocument): boolean {
   const fileName = doc.fileName;
+  const baseName = fileName.split("/").pop() || "";
+
+  // Check for Makefile (no extension)
+  if (baseName === "Makefile" || baseName === "makefile") {
+    return true;
+  }
+
+  // Check for Dockerfile (no extension or with extension)
+  if (
+    baseName === "Dockerfile" ||
+    baseName === "dockerfile" ||
+    baseName.startsWith("Dockerfile.") ||
+    baseName.startsWith("dockerfile.")
+  ) {
+    return true;
+  }
+
   const extension = fileName.split(".").pop() || "";
 
   return getAllSupportedExtensions().includes(extension);
@@ -66,8 +83,23 @@ export const SUPPORTED_EXTENSIONS: string[] = [
   "sh",
   "bash",
   "zsh",
+  "ps1",
+  "psm1",
+  "psd1",
   "yaml",
   "yml",
+  "html",
+  "htm",
+  "rb",
+  "css",
+  "scss",
+  "sass",
+  "less",
+  "toml",
+  "vue",
+  "svelte",
+  "xml",
+  "mk",
   "json",
   "jsonc",
   "md",
@@ -211,7 +243,17 @@ export function getCommentTypeForExtension(
   | "swift"
   | "php"
   | "shell"
+  | "powershell"
   | "yaml"
+  | "html"
+  | "ruby"
+  | "css"
+  | "toml"
+  | "vue"
+  | "svelte"
+  | "xml"
+  | "makefile"
+  | "dockerfile"
   | "json"
   | "markdown"
   | null {
@@ -228,7 +270,16 @@ export function getCommentTypeForExtension(
   if (extension === "swift") return "swift";
   if (extension === "php") return "php";
   if (["sh", "bash", "zsh"].includes(extension)) return "shell";
+  if (["ps1", "psm1", "psd1"].includes(extension)) return "powershell";
   if (["yaml", "yml"].includes(extension)) return "yaml";
+  if (["html", "htm"].includes(extension)) return "html";
+  if (extension === "rb") return "ruby";
+  if (["css", "scss", "sass", "less"].includes(extension)) return "css";
+  if (extension === "toml") return "toml";
+  if (extension === "vue") return "vue";
+  if (extension === "svelte") return "svelte";
+  if (extension === "xml") return "xml";
+  if (extension === "mk") return "makefile";
   if (extension === "md") return "markdown";
 
   const config = vscode.workspace.getConfiguration("commentLinking");
@@ -248,7 +299,17 @@ export function getCommentTypeForExtension(
     customType === "swift" ||
     customType === "php" ||
     customType === "shell" ||
-    customType === "yaml"
+    customType === "powershell" ||
+    customType === "yaml" ||
+    customType === "html" ||
+    customType === "ruby" ||
+    customType === "css" ||
+    customType === "toml" ||
+    customType === "vue" ||
+    customType === "svelte" ||
+    customType === "xml" ||
+    customType === "makefile" ||
+    customType === "dockerfile"
   ) {
     return customType;
   }
@@ -260,6 +321,23 @@ export function getCommentPrefixesForDocument(
   doc: vscode.TextDocument
 ): string[] {
   const fileName = doc.fileName;
+  const baseName = fileName.split("/").pop() || "";
+
+  // Check for Makefile (no extension)
+  if (baseName === "Makefile" || baseName === "makefile") {
+    return ["#"];
+  }
+
+  // Check for Dockerfile (no extension or with extension)
+  if (
+    baseName === "Dockerfile" ||
+    baseName === "dockerfile" ||
+    baseName.startsWith("Dockerfile.") ||
+    baseName.startsWith("dockerfile.")
+  ) {
+    return ["#"];
+  }
+
   const extension = fileName.split(".").pop() || "";
   const commentType = getCommentTypeForExtension(extension);
 
@@ -292,7 +370,27 @@ export function getCommentPrefixesForDocument(
       return ["//", "/*", "*", "#"];
     case "shell":
       return ["#"];
+    case "powershell":
+      return ["#"];
     case "yaml":
+      return ["#"];
+    case "html":
+      return ["<!--"];
+    case "ruby":
+      return ["#"];
+    case "css":
+      return ["/*", "*"];
+    case "toml":
+      return ["#"];
+    case "vue":
+      return ["//", "/*", "*", "<!--"];
+    case "svelte":
+      return ["//", "/*", "*", "<!--"];
+    case "xml":
+      return ["<!--"];
+    case "makefile":
+      return ["#"];
+    case "dockerfile":
       return ["#"];
     case "markdown":
       return [];
@@ -302,13 +400,32 @@ export function getCommentPrefixesForDocument(
 }
 
 export function getSupportedGlobPatterns(): string[] {
-  return getAllSupportedExtensions().map((ext) => `**/*.${ext}`);
+  const patterns = getAllSupportedExtensions().map((ext) => `**/*.${ext}`);
+  // Add Makefile pattern
+  patterns.push("**/Makefile", "**/makefile");
+  // Add Dockerfile patterns
+  patterns.push(
+    "**/Dockerfile",
+    "**/dockerfile",
+    "**/Dockerfile.*",
+    "**/dockerfile.*"
+  );
+  return patterns;
 }
 
 export function getDocumentSelectorsForLinks(): vscode.DocumentSelector {
-  return getAllSupportedExtensions().map(
+  const selectors = getAllSupportedExtensions().map(
     (ext) => ({ pattern: `**/*.${ext}` } as vscode.DocumentFilter)
-  ) as vscode.DocumentSelector;
+  );
+  // Add Makefile selectors
+  selectors.push({ pattern: "**/Makefile" } as vscode.DocumentFilter);
+  selectors.push({ pattern: "**/makefile" } as vscode.DocumentFilter);
+  // Add Dockerfile selectors
+  selectors.push({ pattern: "**/Dockerfile" } as vscode.DocumentFilter);
+  selectors.push({ pattern: "**/dockerfile" } as vscode.DocumentFilter);
+  selectors.push({ pattern: "**/Dockerfile.*" } as vscode.DocumentFilter);
+  selectors.push({ pattern: "**/dockerfile.*" } as vscode.DocumentFilter);
+  return selectors as vscode.DocumentSelector;
 }
 
 // Comments
