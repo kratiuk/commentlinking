@@ -68,7 +68,9 @@
 - `C` (.c)
 - `C#` (.cs)
 - `C++` (.cpp, .cxx, .cc, .hpp, .h)
+- `Clojure` (.clj, .cljs, .cljc)
 - `CSS` (.css, .scss, .sass, .less)
+- `Dart` (.dart)
 - `Dockerfile` (Dockerfile, dockerfile, Dockerfile.\*)
 - `Go` (.go)
 - `HTML` (.html, .htm)
@@ -104,8 +106,7 @@ You can extend support to any file type by configuring custom comment syntax in 
 ```json
 {
   "commentLinking.customFileTypes": {
-    ".dart": "js"
-    // Other extensions you want to add support for
+    ".pde": "js"
   }
 }
 ```

@@ -103,6 +103,10 @@ export const SUPPORTED_EXTENSIONS: string[] = [
   "json",
   "jsonc",
   "md",
+  "dart",
+  "clj",
+  "cljs",
+  "cljc",
 ];
 
 function getCustomExtensions(): string[] {
@@ -256,6 +260,8 @@ export function getCommentTypeForExtension(
   | "dockerfile"
   | "json"
   | "markdown"
+  | "dart"
+  | "clojure"
   | null {
   if (["js", "ts", "tsx", "jsx", "json", "jsonc"].includes(extension))
     return "js";
@@ -281,6 +287,8 @@ export function getCommentTypeForExtension(
   if (extension === "xml") return "xml";
   if (extension === "mk") return "makefile";
   if (extension === "md") return "markdown";
+  if (extension === "dart") return "dart";
+  if (["clj", "cljs", "cljc"].includes(extension)) return "clojure";
 
   const config = vscode.workspace.getConfiguration("commentLinking");
   const customTypes = config.get<Record<string, string>>("customFileTypes", {});
@@ -309,7 +317,9 @@ export function getCommentTypeForExtension(
     customType === "svelte" ||
     customType === "xml" ||
     customType === "makefile" ||
-    customType === "dockerfile"
+    customType === "dockerfile" ||
+    customType === "dart" ||
+    customType === "clojure"
   ) {
     return customType;
   }
@@ -394,6 +404,10 @@ export function getCommentPrefixesForDocument(
       return ["#"];
     case "markdown":
       return [];
+    case "dart":
+      return ["//", "/*", "*"];
+    case "clojure":
+      return [";"];
     default:
       return [];
   }
