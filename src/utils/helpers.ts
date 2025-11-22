@@ -152,6 +152,76 @@ export function isCommentLine(
     return isInsidePythonDocstring(doc, lineNumber);
   }
 
+  // Special handling for HTML multi-line comments
+  if (commentType === "html") {
+    return isInsideHtmlComment(doc, lineNumber);
+  }
+
+  return false;
+}
+
+function isInsideHtmlComment(
+  doc: vscode.TextDocument,
+  lineNumber: number
+): boolean {
+  // Look backwards to find the start of an HTML comment
+  let commentStart = -1;
+
+  for (let i = lineNumber; i >= 0; i--) {
+    const lineText = doc.lineAt(i).text;
+
+    // Check if this line has closing comment marker
+    if (lineText.includes("-->")) {
+      // If we find a closing marker before opening, we're not in a comment
+      const closeIndex = lineText.lastIndexOf("-->");
+      const openIndex = lineText.indexOf("<!--");
+
+      // If there's an opening on the same line after the closing, continue searching
+      if (openIndex !== -1 && openIndex > closeIndex) {
+        commentStart = i;
+        break;
+      }
+      // Otherwise, we're past a closed comment
+      return false;
+    }
+
+    // Check for opening comment marker
+    if (lineText.includes("<!--")) {
+      commentStart = i;
+      break;
+    }
+  }
+
+  if (commentStart === -1) return false;
+
+  // Look forward from comment start to find the end
+  for (let i = commentStart; i < doc.lineCount; i++) {
+    const lineText = doc.lineAt(i).text;
+
+    // Check if the opening line also has closing marker
+    if (i === commentStart) {
+      const openIndex = lineText.indexOf("<!--");
+      const closeIndex = lineText.indexOf("-->", openIndex + 4);
+
+      // If closing marker is on the same line, check if target is on this line
+      if (closeIndex !== -1) {
+        return lineNumber === commentStart;
+      }
+      continue;
+    }
+
+    // Look for closing marker
+    if (lineText.includes("-->")) {
+      // Found the end of comment
+      return lineNumber <= i && lineNumber >= commentStart;
+    }
+
+    // If we've passed our target line without finding the end, we're inside
+    if (i > lineNumber) {
+      return true;
+    }
+  }
+
   return false;
 }
 
@@ -385,7 +455,7 @@ export function getCommentPrefixesForDocument(
     case "yaml":
       return ["#"];
     case "html":
-      return ["<!--"];
+      return ["<!--", "//", "/*", "*"];
     case "ruby":
       return ["#"];
     case "css":

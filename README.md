@@ -73,7 +73,7 @@
 - `Dart` (.dart)
 - `Dockerfile` (Dockerfile, dockerfile, Dockerfile.\*)
 - `Go` (.go)
-- `HTML` (.html, .htm)
+- `HTML` (.html, .htm) - supports `HTML`, `JavaScript`, and `CSS` comments
 - `Java` (.java)
 - `JavaScript` (.js)
 - `JavaScript React` (.jsx)
