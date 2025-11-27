@@ -5,33 +5,19 @@
 </p>
 
 <p align="center">
-  <a href="https://marketplace.visualstudio.com/items?itemName=kratiuk.commentlinking">
-    <img alt="VS Marketplace" src="https://img.shields.io/visual-studio-marketplace/v/kratiuk.commentlinking?color=blue&label=VS%20Marketplace&cacheSeconds=300" />
-  </a>
-  <a href="https://marketplace.visualstudio.com/items?itemName=kratiuk.commentlinking">
-    <img alt="VS Marketplace Downloads" src="https://img.shields.io/visual-studio-marketplace/d/kratiuk.commentlinking?label=Downloads&color=informational&cacheSeconds=10800" />
-  </a>
-  <a href="https://marketplace.visualstudio.com/items?itemName=kratiuk.commentlinking">
-    <img alt="VS Marketplace Rating" src="https://img.shields.io/visual-studio-marketplace/r/kratiuk.commentlinking?label=Rating&color=yellow&cacheSeconds=10800" />
-  </a>
+  <a href="https://marketplace.visualstudio.com/items?itemName=kratiuk.commentlinking"><img alt="VS Marketplace" src="https://img.shields.io/visual-studio-marketplace/v/kratiuk.commentlinking?color=blue&label=VS%20Marketplace&cacheSeconds=300" /></a>
+  <a href="https://marketplace.visualstudio.com/items?itemName=kratiuk.commentlinking"><img alt="VS Marketplace Downloads" src="https://img.shields.io/visual-studio-marketplace/d/kratiuk.commentlinking?label=Downloads&color=informational&cacheSeconds=10800" /></a>
+  <a href="https://marketplace.visualstudio.com/items?itemName=kratiuk.commentlinking"><img alt="VS Marketplace Rating" src="https://img.shields.io/visual-studio-marketplace/r/kratiuk.commentlinking?label=Rating&color=yellow&cacheSeconds=10800" /></a>
 </p>
 
 <p align="center">
-  <a href="https://open-vsx.org/extension/kratiuk/commentlinking">
-    <img alt="Open VSX Registry" src="https://img.shields.io/open-vsx/v/kratiuk/commentlinking?color=purple&label=Open%20VSX%20Registry&cacheSeconds=300" />
-  </a>
-  <a href="https://open-vsx.org/extension/kratiuk/commentlinking">
-    <img alt="Open VSX Downloads" src="https://img.shields.io/open-vsx/dt/kratiuk/commentlinking?label=Downloads&color=informational&cacheSeconds=10800" />
-  </a>
-  <a href="https://open-vsx.org/extension/kratiuk/commentlinking">
-    <img alt="Open VSX Rating" src="https://img.shields.io/open-vsx/rating/kratiuk/commentlinking?label=Rating&color=yellow&cacheSeconds=10800" />
-  </a>
+  <a href="https://open-vsx.org/extension/kratiuk/commentlinking"><img alt="Open VSX Registry" src="https://img.shields.io/open-vsx/v/kratiuk/commentlinking?color=purple&label=Open%20VSX%20Registry&cacheSeconds=300" /></a>
+  <a href="https://open-vsx.org/extension/kratiuk/commentlinking"><img alt="Open VSX Downloads" src="https://img.shields.io/open-vsx/dt/kratiuk/commentlinking?label=Downloads&color=informational&cacheSeconds=10800" /></a>
+  <a href="https://open-vsx.org/extension/kratiuk/commentlinking"><img alt="Open VSX Rating" src="https://img.shields.io/open-vsx/rating/kratiuk/commentlinking?label=Rating&color=yellow&cacheSeconds=10800" /></a>
 </p>
 
 <p align="center">
-  <a href="https://github.com/kratiuk/commentlinking/blob/master/LICENSE">
-    <img alt="License" src="https://img.shields.io/badge/License-MIT-success" />
-  </a>
+  <a href="https://github.com/kratiuk/commentlinking/blob/master/LICENSE"><img alt="License" src="https://img.shields.io/badge/License-MIT-success" /></a>
 </p>
 
 <p align="center">

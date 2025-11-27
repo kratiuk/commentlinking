@@ -4,3 +4,7 @@
 - Centered all section headings and the tagline quote
 - Moved **Features** section right after **Examples**
 - Added horizontal line after the tagline quote
+
+## 🐛 Fixes
+
+- Fixed blue underlines appearing between badges by removing whitespace in anchor tags
