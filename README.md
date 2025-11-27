@@ -1,4 +1,4 @@
-## 💬 Comment Linking extension for VS Code
+<h2 align="center">💬 Comment Linking extension for VS Code</h2>
 
 <p align="center">
   <img src="./resources/demo/logo.png" alt="Logo" width="160"/>
@@ -6,37 +6,41 @@
 
 <p align="center">
   <a href="https://marketplace.visualstudio.com/items?itemName=kratiuk.commentlinking">
-    <img alt="VS Marketplace" src="https://img.shields.io/visual-studio-marketplace/v/kratiuk.commentlinking?style=for-the-badge&color=blue&label=VS%20Marketplace" />
+    <img alt="VS Marketplace" src="https://img.shields.io/visual-studio-marketplace/v/kratiuk.commentlinking?color=blue&label=VS%20Marketplace&cacheSeconds=300" />
   </a>
   <a href="https://marketplace.visualstudio.com/items?itemName=kratiuk.commentlinking">
-    <img alt="VS Marketplace Downloads" src="https://img.shields.io/visual-studio-marketplace/d/kratiuk.commentlinking?style=for-the-badge&color=informational&cacheSeconds=300" />
+    <img alt="VS Marketplace Downloads" src="https://img.shields.io/visual-studio-marketplace/d/kratiuk.commentlinking?label=Downloads&color=informational&cacheSeconds=10800" />
   </a>
   <a href="https://marketplace.visualstudio.com/items?itemName=kratiuk.commentlinking">
-    <img alt="VS Marketplace Rating" src="https://img.shields.io/visual-studio-marketplace/r/kratiuk.commentlinking?style=for-the-badge&color=yellow&cacheSeconds=300" />
+    <img alt="VS Marketplace Rating" src="https://img.shields.io/visual-studio-marketplace/r/kratiuk.commentlinking?label=Rating&color=yellow&cacheSeconds=10800" />
   </a>
 </p>
 
 <p align="center">
   <a href="https://open-vsx.org/extension/kratiuk/commentlinking">
-    <img alt="Open VSX Registry" src="https://img.shields.io/open-vsx/v/kratiuk/commentlinking?style=for-the-badge&color=purple&label=Open%20VSX%20Registry" />
+    <img alt="Open VSX Registry" src="https://img.shields.io/open-vsx/v/kratiuk/commentlinking?color=purple&label=Open%20VSX%20Registry&cacheSeconds=300" />
   </a>
   <a href="https://open-vsx.org/extension/kratiuk/commentlinking">
-    <img alt="Open VSX Downloads" src="https://img.shields.io/open-vsx/dt/kratiuk/commentlinking?style=for-the-badge&color=informational" />
+    <img alt="Open VSX Downloads" src="https://img.shields.io/open-vsx/dt/kratiuk/commentlinking?label=Downloads&color=informational&cacheSeconds=10800" />
   </a>
   <a href="https://open-vsx.org/extension/kratiuk/commentlinking">
-    <img alt="Open VSX Rating" src="https://img.shields.io/open-vsx/rating/kratiuk/commentlinking?style=for-the-badge&color=yellow" />
+    <img alt="Open VSX Rating" src="https://img.shields.io/open-vsx/rating/kratiuk/commentlinking?label=Rating&color=yellow&cacheSeconds=10800" />
   </a>
 </p>
 
 <p align="center">
   <a href="https://github.com/kratiuk/commentlinking/blob/master/LICENSE">
-    <img alt="License" src="https://img.shields.io/badge/License-MIT-success?style=for-the-badge" />
+    <img alt="License" src="https://img.shields.io/badge/License-MIT-success" />
   </a>
 </p>
 
-`🔗 Link between comments in code. Create anchors and jump to them from anywhere`
+<p align="center">
+  <code>🔗 Link between comments in code. Create anchors and jump to them from anywhere</code>
+</p>
 
-### 🎬 Examples
+---
+
+<h3 align="center">🎬 Examples</h3>
 
 #### 🧠 How it works
 
@@ -63,7 +67,14 @@
 
   </details>
 
-### ✅ Supported languages and file formats
+<h3 align="center">✨ Features</h3>
+
+- 🔍 Anchors tree view to browse anchors across files
+- 🎯 Inline links in comments that jump to anchors
+- 🖍️ Smart decorations to highlight only the preview text
+- 📋 Copy anchor ID from the Anchors view
+
+<h3 align="center">✅ Supported languages and file formats</h3>
 
 - `C` (.c)
 - `C#` (.cs)
@@ -97,7 +108,7 @@
 - `XML` (.xml)
 - `YAML` (.yaml, .yml)
 
-### ⚙️ Custom File Types
+<h3 align="center">⚙️ Custom File Types</h3>
 
 You can extend support to any file type by configuring custom comment syntax in VS Code settings:
 
@@ -118,21 +129,14 @@ You can extend support to any file type by configuring custom comment syntax in 
   - `"js"` - Uses `//` comments (like JavaScript/TypeScript)
   - `"python"` - Uses `#` comments (like Python/Shell)
 
-### 📂 Indexing scope & exclusions
+<h3 align="center">📂 Indexing scope & exclusions</h3>
 
 - Scans all workspace folders for supported file extensions
 - **Gitignore support**: Uses `.gitignore` patterns by default (disable via `commentLinking.useGitignore` setting)
 - **Custom exclusions**: Create `.commentlinkingignore` file in project root to exclude additional files/directories
 - **Priority**: `.commentlinkingignore` takes precedence over `.gitignore` patterns
 
-### ✨ Features
-
-- 🔍 Anchors tree view to browse anchors across files
-- 🎯 Inline links in comments that jump to anchors
-- 🖍️ Smart decorations to highlight only the preview text
-- 📋 Copy anchor ID from the Anchors view
-
-### 📦 Installation
+<h3 align="center">📦 Installation</h3>
 
 1. Install the extension
 2. Reload `VS Code` window (you'll be prompted on first install)
@@ -145,7 +149,7 @@ To view detailed indexing logs and performance information:
 2. Select "Comment Linking" from the dropdown
 3. Watch real-time indexing progress and timing information
 
-### 🧪 Development & Testing
+<h3 align="center">🧪 Development & Testing</h3>
 
 To test changes during development:
 
@@ -159,7 +163,7 @@ To build and install the extension manually:
 2. Build the extension package: `pnpm package`
 3. Install the generated `.vsix` file in VS Code: `Extensions > Install from VSIX...`
 
-### ✅ Roadmap / To‑Do
+<h3 align="center">✅ Roadmap / To‑Do</h3>
 
 - [ ] 📖 Create Markdown preview with link and anchor support
 - [ ] 🔗 Add support for creating anchors and links without preview text in backlinks

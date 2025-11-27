@@ -1,3 +1,6 @@
-## ✨ Features
+## 📖 Documentation
 
-- Added support for JavaScript and CSS comments in HTML files
+- Updated `README` badges to use flat style and added caching to reduce rate limiting
+- Centered all section headings and the tagline quote
+- Moved **Features** section right after **Examples**
+- Added horizontal line after the tagline quote
