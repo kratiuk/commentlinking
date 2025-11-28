@@ -36,22 +36,12 @@
 
 - Basic Link ↔ Anchor interaction:
 
-  ![Link-Anchor Demo](./resources/demo/new/basic-preview.gif)
+  ![Link-Anchor Demo](./resources/demo/basic-preview.gif)
 
 - Anchors view (tree of all anchors):
 
   _Note: This demo shows the legacy anchor syntax_
-  ![Anchors View Demo](./resources/demo/old/2.gif)
-
-  <details>
-  <summary>Click to see legacy syntax demo<br/>
-  (enable <code>commentLinking.enableLegacySyntax</code> in settings)</summary>
-
-  ![Legacy Syntax Demo](./resources/demo/old/1.gif)
-
-  ![Legacy Syntax](./resources/demo/old/old-syntax.png)
-
-  </details>
+  ![Anchors View Demo](./resources/demo/anchors-view.gif)
 
 <h3 align="center">✨ Features</h3>
 
@@ -78,7 +68,7 @@
 - `JSON With Comments` (.jsonc)
 - `Kotlin` (.kt, .kts)
 - `Makefile` (Makefile, makefile, .mk)
-- `Markdown` (.md) - full text support (legacy syntax requires special format)
+- `Markdown` (.md) - full text support
 - `PHP` (.php)
 - `PowerShell` (.ps1, .psm1, .psd1)
 - `Python` (.py)
@@ -156,7 +146,6 @@ To build and install the extension manually:
 - [ ] 🔀 Add sorting by line numbers in anchor tree view
 - [ ] ⚙️ Add support for custom comment types for specific files
 - [ ] 🎨 Add functionality to configure anchor and link styles
-- [ ] 🔄 Add functionality to disable new syntax if users want to use only legacy syntax
 - [ ] 🏷️ Add button in anchor tree to toggle between displaying anchor IDs and preview text
 - [ ] 🔍 Add support for displaying all links to a specific anchor in the editor
 - [ ] 📚 Add and host comprehensive documentation

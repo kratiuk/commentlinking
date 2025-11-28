@@ -1,3 +1,8 @@
+## ⚠️ Breaking Changes
+
+- Removed legacy syntax support
+- Removed `commentLinking.enableLegacySyntax` setting
+
 ## 📖 Documentation
 
 - Updated `README` badges to use flat style and added caching to reduce rate limiting

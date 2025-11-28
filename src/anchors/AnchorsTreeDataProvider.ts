@@ -6,7 +6,6 @@ import { AnchorTreeItem } from "../tree/AnchorTreeItem";
 import { FileTreeItem } from "../tree/FileTreeItem";
 import {
   findAllSupportedFiles,
-  scanUniversalAnchorMatches,
   scanUniversalBacklinkAnchorMatches,
 } from "../utils/helpers";
 
@@ -179,21 +178,6 @@ export class AnchorsTreeDataProvider
     doc: vscode.TextDocument
   ): AnchorTreeItem[] {
     const results: AnchorTreeItem[] = [];
-
-    const matches = scanUniversalAnchorMatches(doc);
-    for (const m of matches) {
-      results.push(
-        new AnchorTreeItem(
-          m.anchorId,
-          doc.uri,
-          m.lineNumber,
-          m.preview,
-          m.columnStart,
-          m.selectionStartColumn,
-          m.selectionEndColumn
-        )
-      );
-    }
 
     const backlinkMatches = scanUniversalBacklinkAnchorMatches(doc);
     for (const m of backlinkMatches) {

@@ -60,11 +60,6 @@
             "description": "Comment syntax type: 'js' for // comments, 'python' for # comments"
           }
         },
-        "commentLinking.enableLegacySyntax": {
-          "type": "boolean",
-          "default": false,
-          "description": "Enable legacy syntax: [Preview](#AnchorID) for anchors and [Link](AnchorID) for links. When disabled, only new backlink syntax [[AnchorID|Preview]] and [[#AnchorID|Link]] is used."
-        },
         "commentLinking.useGitignore": {
           "type": "boolean",
           "default": true,

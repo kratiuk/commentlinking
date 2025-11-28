@@ -119,7 +119,6 @@ export function activate(context: vscode.ExtensionContext) {
     vscode.workspace.onDidChangeConfiguration((e) => {
       if (
         e.affectsConfiguration("commentLinking.customFileTypes") ||
-        e.affectsConfiguration("commentLinking.enableLegacySyntax") ||
         e.affectsConfiguration("commentLinking.useGitignore")
       ) {
         provider.debouncedRebuild();

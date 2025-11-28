@@ -121,11 +121,6 @@ export function getAllSupportedExtensions(): string[] {
   return [...SUPPORTED_EXTENSIONS, ...getCustomExtensions()];
 }
 
-export function isLegacySyntaxEnabled(): boolean {
-  const config = vscode.workspace.getConfiguration("commentLinking");
-  return config.get<boolean>("enableLegacySyntax", false);
-}
-
 export function isCommentLine(
   doc: vscode.TextDocument,
   lineNumber: number
@@ -545,16 +540,10 @@ export function getSuppressDecorationOnJump(): SuppressionPos {
 
 // Regex
 
-export const MARKDOWN_ANCHOR_REGEX = /\[[^\]]+\]\(<>(#[A-Za-z0-9_-]+)\)/g;
-export const MARKDOWN_LINK_REGEX = /\[[^\]]+\]\(<>([A-Za-z0-9_-]+)\)/g;
-
 export const MARKDOWN_BACKLINK_ANCHOR_REGEX =
   /\[\[([A-Za-z0-9_-]+)\|([^\]]+)\]\]/gu;
 export const MARKDOWN_BACKLINK_LINK_REGEX =
   /\[\[(#[A-Za-z0-9_-]+)\|([^\]]+)\]\]/gu;
-
-export const ANCHOR_LINK_REGEX = /\[[^\]]+\]\(#([A-Za-z0-9_-]+)\)/g;
-export const PLAIN_LINK_REGEX = /\[[^\]]+\]\(([A-Za-z0-9_-]+)\)/g;
 
 export const BACKLINK_ANCHOR_REGEX = /\[\[([A-Za-z0-9_-]+)\|([^\]]+)\]\]/gu;
 export const BACKLINK_LINK_REGEX = /\[\[(#[A-Za-z0-9_-]+)\|([^\]]+)\]\]/gu;
@@ -568,120 +557,6 @@ export type CommentMatch = {
   anchorId: string;
   preview: string;
 };
-
-export function scanCommentMatches(
-  doc: vscode.TextDocument,
-  regex: RegExp
-): CommentMatch[] {
-  const commentPrefixes = getCommentPrefixesForDocument(doc);
-
-  const results: CommentMatch[] = [];
-  for (let line = 0; line < doc.lineCount; line++) {
-    const text = doc.lineAt(line).text;
-    const trimmed = text.trim();
-
-    // Use new comment detection logic
-    if (!isCommentLine(doc, line)) continue;
-
-    let match: RegExpExecArray | null;
-    regex.lastIndex = 0;
-    while ((match = regex.exec(text)) !== null) {
-      const fullEnd = match.index + match[0].length;
-      const anchorId = match[1];
-      const columnStart = match.index;
-      const selectionStartColumn = columnStart + 1;
-      const selectionEndColumn = text.indexOf("]", selectionStartColumn);
-
-      if (selectionEndColumn === -1) continue;
-
-      const prefix = commentPrefixes.find((p) => trimmed.startsWith(p)) ?? "";
-      const preview = trimmed.substring(prefix.length).trim();
-
-      results.push({
-        lineNumber: line,
-        columnStart,
-        selectionStartColumn,
-        selectionEndColumn,
-        fullEnd,
-        anchorId,
-        preview,
-      });
-    }
-  }
-  return results;
-}
-
-export function scanAnchorMatches(doc: vscode.TextDocument): CommentMatch[] {
-  if (!isLegacySyntaxEnabled()) return [];
-  return scanCommentMatches(doc, ANCHOR_LINK_REGEX);
-}
-
-/**
- * Universal function to scan anchors from any document type
- */
-export function scanUniversalAnchorMatches(
-  doc: vscode.TextDocument
-): CommentMatch[] {
-  if (!isLegacySyntaxEnabled()) return [];
-
-  const isMarkdown = doc.fileName.endsWith(".md");
-
-  if (isMarkdown) {
-    return scanAllLineMatches(doc, MARKDOWN_ANCHOR_REGEX);
-  } else {
-    return scanCommentMatches(doc, ANCHOR_LINK_REGEX);
-  }
-}
-
-export function scanPlainLinkMatches(doc: vscode.TextDocument): CommentMatch[] {
-  if (!isLegacySyntaxEnabled()) return [];
-  return scanCommentMatches(doc, PLAIN_LINK_REGEX);
-}
-
-function scanAllLineMatches(
-  doc: vscode.TextDocument,
-  regex: RegExp
-): CommentMatch[] {
-  const results: CommentMatch[] = [];
-  for (let line = 0; line < doc.lineCount; line++) {
-    const text = doc.lineAt(line).text;
-    let match: RegExpExecArray | null;
-    regex.lastIndex = 0;
-    while ((match = regex.exec(text)) !== null) {
-      const fullEnd = match.index + match[0].length;
-      const anchorId = match[1].startsWith("#") ? match[1].slice(1) : match[1];
-      const columnStart = match.index;
-      const selectionStartColumn = columnStart + 1;
-      const selectionEndColumn = text.indexOf("]", selectionStartColumn);
-      if (selectionEndColumn === -1) continue;
-      const preview = text.substring(selectionStartColumn, selectionEndColumn);
-      results.push({
-        lineNumber: line,
-        columnStart,
-        selectionStartColumn,
-        selectionEndColumn,
-        fullEnd,
-        anchorId,
-        preview,
-      });
-    }
-  }
-  return results;
-}
-
-export function scanMarkdownAnchorMatches(
-  doc: vscode.TextDocument
-): CommentMatch[] {
-  if (!isLegacySyntaxEnabled()) return [];
-  return scanAllLineMatches(doc, MARKDOWN_ANCHOR_REGEX);
-}
-
-export function scanMarkdownLinkMatches(
-  doc: vscode.TextDocument
-): CommentMatch[] {
-  if (!isLegacySyntaxEnabled()) return [];
-  return scanAllLineMatches(doc, MARKDOWN_LINK_REGEX);
-}
 
 // Markdown backlink scanning functions
 function scanMarkdownBacklinkMatches(
