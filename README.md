@@ -43,12 +43,16 @@
   _Note: This demo shows the legacy anchor syntax_
   ![Anchors View Demo](./resources/demo/anchors-view.gif)
 
+---
+
 <h3 align="center">✨ Features</h3>
 
 - 🔍 Anchors tree view to browse anchors across files
 - 🎯 Inline links in comments that jump to anchors
 - 🖍️ Smart decorations to highlight only the preview text
 - 📋 Copy anchor ID from the Anchors view
+
+---
 
 <h3 align="center">✅ Supported languages and file formats</h3>
 
@@ -84,6 +88,8 @@
 - `XML` (.xml)
 - `YAML` (.yaml, .yml)
 
+---
+
 <h3 align="center">⚙️ Custom File Types</h3>
 
 You can extend support to any file type by configuring custom comment syntax in VS Code settings:
@@ -105,6 +111,8 @@ You can extend support to any file type by configuring custom comment syntax in 
   - `"js"` - Uses `//` comments (like JavaScript/TypeScript)
   - `"python"` - Uses `#` comments (like Python/Shell)
 
+---
+
 <h3 align="center">📂 Indexing scope & exclusions</h3>
 
 - Scans all workspace folders for supported file extensions
@@ -112,18 +120,24 @@ You can extend support to any file type by configuring custom comment syntax in 
 - **Custom exclusions**: Create `.commentlinkingignore` file in project root to exclude additional files/directories
 - **Priority**: `.commentlinkingignore` takes precedence over `.gitignore` patterns
 
+---
+
 <h3 align="center">📦 Installation</h3>
 
 1. Install the extension
 2. Reload `VS Code` window (you'll be prompted on first install)
 
-### 📊 Debugging & Logging
+---
+
+<h3 align="center">📊 Debugging & Logging</h3>
 
 To view detailed indexing logs and performance information:
 
 1. Open VS Code Output panel (`View > Output`)
 2. Select "Comment Linking" from the dropdown
 3. Watch real-time indexing progress and timing information
+
+---
 
 <h3 align="center">🧪 Development & Testing</h3>
 
@@ -138,6 +152,8 @@ To build and install the extension manually:
 1. Install all dependencies: `pnpm install`
 2. Build the extension package: `pnpm package`
 3. Install the generated `.vsix` file in VS Code: `Extensions > Install from VSIX...`
+
+---
 
 <h3 align="center">✅ Roadmap / To‑Do</h3>
 
@@ -155,4 +171,4 @@ To build and install the extension manually:
 
 ---
 
-Made with 😡 by [Viktor Kratiuk](https://github.com/kratiuk)
+<p align="center">Made with 😡 by <a href="https://github.com/kratiuk">Viktor Kratiuk</a></p>
