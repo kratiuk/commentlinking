@@ -124,8 +124,23 @@ You can extend support to any file type by configuring custom comment syntax in 
 
 <h3 align="center">📦 Installation</h3>
 
-1. Install the extension
-2. Reload `VS Code` window (you'll be prompted on first install)
+- Search for `Comment Linking` in VS Code Marketplace and install
+- Reload `VS Code` window (you'll be prompted on first install)
+
+<br>
+
+To install a manually built version (Snapshot Build):
+
+> ⚠️ This requires `Node.js` and `pnpm` installed on your machine
+
+```bash
+git clone https://github.com/kratiuk/commentlinking.git
+cd commentlinking
+pnpm install
+pnpm package # This will generate a .vsix file
+```
+
+Then in VS Code: `Extensions` → `...` → `Install from VSIX...` and select the generated file
 
 ---
 
@@ -136,22 +151,6 @@ To view detailed indexing logs and performance information:
 1. Open VS Code Output panel (`View > Output`)
 2. Select "Comment Linking" from the dropdown
 3. Watch real-time indexing progress and timing information
-
----
-
-<h3 align="center">🧪 Development & Testing</h3>
-
-To test changes during development:
-
-1. Press `F5` to launch Extension Development Host
-2. Make changes to the code and save
-3. In the test window, run `Developer: Reload Window` to see updates
-
-To build and install the extension manually:
-
-1. Install all dependencies: `pnpm install`
-2. Build the extension package: `pnpm package`
-3. Install the generated `.vsix` file in VS Code: `Extensions > Install from VSIX...`
 
 ---
 
