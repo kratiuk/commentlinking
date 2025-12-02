@@ -14,6 +14,7 @@
 
 ## 📖 Documentation
 
+- Created `CONTRIBUTING.md` with development instructions and release process
 - Updated `README` badges to use flat style and added caching to reduce rate limiting
 - Centered all section headings and the tagline quote
 - Added horizontal lines between all sections for better readability
