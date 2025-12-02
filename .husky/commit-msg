@@ -1,1 +1,0 @@
-node scripts/check-version-sync.js "$1"

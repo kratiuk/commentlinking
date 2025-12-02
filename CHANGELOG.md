@@ -10,7 +10,7 @@
 
 ## 💻 Scripts
 
-- Removed Cyrillic check script as it's no longer needed for the project
+- Removed all scripts and Husky git hooks as they're not needed currently
 
 ## 📖 Documentation
 
