@@ -1,0 +1,82 @@
+name: Release to GitHub, VS Marketplace & OpenVSX
+
+on:
+  push:
+    tags:
+      - "[0-9]+.[0-9]+.[0-9]+"
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    name: Transform Tag, Build & Publish
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Transform tag (0.0.8 → v0.0.8)
+        id: tag
+        run: |
+          TAG_NAME="${GITHUB_REF#refs/tags/}"
+          VERSION_TAG="v$TAG_NAME"
+          echo "version=$TAG_NAME" >> $GITHUB_OUTPUT
+          echo "version-tag=$VERSION_TAG" >> $GITHUB_OUTPUT
+          echo "Transforming tag: $TAG_NAME → $VERSION_TAG"
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git push origin :refs/tags/$TAG_NAME
+          git tag $VERSION_TAG
+          git push origin $VERSION_TAG
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: latest
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Build, package, and locate extension
+        id: vsix
+        run: |
+          pnpm run compile
+          pnpm install -g @vscode/vsce
+          vsce package --allow-missing-repository
+          echo "file=$(ls *.vsix | head -1)" >> $GITHUB_OUTPUT
+
+      - name: Read CHANGELOG
+        id: changelog
+        run: |
+          CHANGELOG_CONTENT=$(cat CHANGELOG.md)
+          echo "content<<EOF" >> $GITHUB_OUTPUT
+          echo "$CHANGELOG_CONTENT" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ steps.tag.outputs.version-tag }}
+          name: ${{ steps.tag.outputs.version-tag }}
+          body: |
+            🚀📝 **Release Changelog**
+
+            ${{ steps.changelog.outputs.content }}
+          files: ${{ steps.vsix.outputs.file }}
+          draft: false
+
+      - name: Publish to VS Code Marketplace
+        run: |
+          vsce publish -p ${{ secrets.VSCE_PAT }} --allow-missing-repository
+
+      - name: Publish to OpenVSX
+        run: |
+          pnpm install -g ovsx
+          ovsx publish -p ${{ secrets.OVSX_PAT }}
