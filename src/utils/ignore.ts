@@ -1,14 +1,17 @@
 import * as vscode from "vscode";
 
 /**
- * Gets ignore patterns to be used as exclude parameter in vscode.workspace.findFiles()
+ * Reads patterns from ignore files
+ *
+ * Normalizes them to `VS Code` glob format and joins into a single exclude string
  */
 export async function getIgnorePatterns(): Promise<string> {
+  // Read raw patterns from ignore files
   const ignorePatterns = await readIgnoreFiles();
   if (ignorePatterns.length === 0) {
     return "";
   }
-  // Normalize gitignore patterns to VS Code glob format
+  // Normalize patterns to VS Code glob format
   const normalizedPatterns = ignorePatterns.flatMap(normalizePattern);
 
   // If only one pattern, return it directly; otherwise wrap in braces
@@ -16,13 +19,13 @@ export async function getIgnorePatterns(): Promise<string> {
     return normalizedPatterns[0];
   }
 
-  // Convert patterns to VS Code exclude format
   return `{${normalizedPatterns.join(",")}}`;
 }
 
 /**
- * Reads both .gitignore (if enabled) and .commentlinkingignore files.
- * .commentlinkingignore takes precedence over .gitignore patterns.
+ * Reads both `.gitignore` and `.commentlinkingignore` files
+ *
+ * `.commentlinkingignore` takes precedence over `.gitignore` patterns
  */
 export async function readIgnoreFiles(): Promise<string[]> {
   const workspaceFolders = vscode.workspace.workspaceFolders;
@@ -32,7 +35,7 @@ export async function readIgnoreFiles(): Promise<string[]> {
 
   // Get gitignore setting from VS Code configuration
   const config = vscode.workspace.getConfiguration("commentLinking");
-  const useGitignore = config.get<boolean>("useGitignore", false);
+  const useGitignore = config.get<boolean>("useGitignore", true);
 
   // Helper function to read ignore file
   const readFile = async (filePath: vscode.Uri): Promise<string[]> => {
@@ -51,7 +54,6 @@ export async function readIgnoreFiles(): Promise<string[]> {
   const ignorePatterns: string[] = [];
 
   for (const folder of workspaceFolders) {
-    // Read .gitignore first (if enabled) - lower priority
     if (useGitignore) {
       const gitIgnore = await readFile(
         vscode.Uri.joinPath(folder.uri, ".gitignore")
@@ -59,22 +61,28 @@ export async function readIgnoreFiles(): Promise<string[]> {
       ignorePatterns.push(...gitIgnore);
     }
 
-    // Read .commentlinkingignore last - higher priority, can override .gitignore
     const commentIgnore = await readFile(
       vscode.Uri.joinPath(folder.uri, ".commentlinkingignore")
     );
     ignorePatterns.push(...commentIgnore);
+
+    // Local ignore file in `.git/` folder (takes highest precedence, not tracked by git)
+    const localIgnore = await readFile(
+      vscode.Uri.joinPath(folder.uri, ".git", ".commentlinkingignore")
+    );
+    ignorePatterns.push(...localIgnore);
   }
 
   return ignorePatterns;
 }
 
 /**
- * [[NormalizeGitignore23456|Converts gitignore pattern to VS Code glob pattern]]
+ * Converts gitignore pattern to VS Code glob pattern
+ *
  * Handles:
- * - /pattern -> pattern (root-relative)
- * - pattern/ -> pattern, star-star/pattern (directory pattern)
- * - pattern -> star-star/pattern (match anywhere)
+ * - `/pattern` -> `pattern` (root-relative)
+ * - `pattern/` -> `pattern`, `star-star/pattern` (directory pattern)
+ * - `pattern` -> `star-star/pattern` (match anywhere)
  */
 function normalizePattern(pattern: string): string[] {
   // Remove leading slash (gitignore: /test -> vscode: test)
