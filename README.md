@@ -116,9 +116,14 @@ You can extend support to any file type by configuring custom comment syntax in 
 <h3 align="center">📂 Indexing scope & exclusions</h3>
 
 - Scans all workspace folders for supported file extensions
-- **Gitignore support**: Uses `.gitignore` patterns by default (disable via `commentLinking.useGitignore` setting)
-- **Custom exclusions**: Create `.commentlinkingignore` file in project root to exclude additional files/directories
-- **Priority**: `.commentlinkingignore` takes precedence over `.gitignore` patterns
+
+<h4 align="center">🙈 Supported ignore files</h4>
+
+| File                         | Works      | Priority | Note                                              |
+| ---------------------------- | ---------- | -------- | ------------------------------------------------- |
+| `.gitignore`                 | by default | lowest   | Disable via `commentLinking.useGitignore` setting |
+| `.commentlinkingignore`      | always     | medium   | Project-level exclusions                          |
+| `.git/.commentlinkingignore` | always     | highest  | Local exclusions, not tracked by git              |
 
 ---
 
