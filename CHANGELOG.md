@@ -1,3 +1,7 @@
+## ✨ Features
+
+- Added local ignore file support (`.git/.commentlinkingignore`), not tracked by git, highest priority
+
 ## ⚠️ Breaking Changes
 
 - Removed legacy syntax support
