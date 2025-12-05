@@ -38,11 +38,12 @@ export async function readIgnoreFiles(): Promise<string[]> {
   const useGitignore = config.get<boolean>("useGitignore", true);
 
   // Helper function to read ignore file
+  // Using fs.readFile instead of openTextDocument to avoid stale cache issue: https://github.com/microsoft/vscode/issues/216964
   const readFile = async (filePath: vscode.Uri): Promise<string[]> => {
     try {
-      const document = await vscode.workspace.openTextDocument(filePath);
-      return document
-        .getText()
+      const content = await vscode.workspace.fs.readFile(filePath);
+      const text = new (globalThis as any).TextDecoder().decode(content);
+      return text
         .split("\n")
         .map((line: string) => line.trim())
         .filter((line: string) => line && !line.startsWith("#"));

@@ -8,6 +8,11 @@
 - Removed legacy syntax support
 - Removed `commentLinking.enableLegacySyntax` setting
 
+## 🐛 Fixes
+
+- Fixed ignore patterns not clearing after deleting `.commentlinkingignore` file ([stale cache issue](https://github.com/microsoft/vscode/issues/216964))
+- Fixed blue underlines appearing between badges by removing whitespace in anchor tags
+
 ## 🚀 CI/CD
 
 - Consolidated 3 separate workflow files into single `release.yml`
@@ -26,7 +31,3 @@
 - Added horizontal lines between all sections for better readability
 - Moved **Features** section right after **Examples**
 - Added horizontal line after the tagline quote
-
-## 🐛 Fixes
-
-- Fixed blue underlines appearing between badges by removing whitespace in anchor tags
