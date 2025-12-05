@@ -43,6 +43,12 @@
   _Note: This demo shows the legacy anchor syntax_
   ![Anchors View Demo](./resources/demo/anchors-view.gif)
 
+- Markdown Preview with anchors and links support:
+
+  ![Markdown Preview Demo](./resources/demo/markdown-preview.gif)
+
+  > ✨ Supports back/forward navigation, live reload on file changes, and opens linked Markdown files within the same preview
+
 ---
 
 <h3 align="center">✨ Features</h3>
@@ -51,6 +57,8 @@
 - 🎯 Inline links in comments that jump to anchors
 - 🖍️ Smart decorations to highlight only the preview text
 - 📋 Copy anchor ID from the Anchors view
+- 📖 Markdown Preview with anchors and links support
+- 🙈 Ignore files on all levels (`.gitignore`, `.commentlinkingignore`, `.git/.commentlinkingignore`)
 
 ---
 
@@ -161,7 +169,6 @@ To view detailed indexing logs and performance information:
 
 <h3 align="center">✅ Roadmap / To‑Do</h3>
 
-- [ ] 📖 Create Markdown preview with link and anchor support
 - [ ] 🔗 Add support for creating anchors and links without preview text in backlinks
 - [ ] 🔀 Add sorting by line numbers in anchor tree view
 - [ ] ⚙️ Add support for custom comment types for specific files
@@ -169,6 +176,7 @@ To view detailed indexing logs and performance information:
 - [ ] 🏷️ Add button in anchor tree to toggle between displaying anchor IDs and preview text
 - [ ] 🔍 Add support for displaying all links to a specific anchor in the editor
 - [ ] 📚 Add and host comprehensive documentation
+- [x] 📖 Create Markdown preview with link and anchor support
 - [x] 🧵 Support multiline comments (block and triple-quote styles)
 - [x] 🌐 Add more languages (e.g., `Go`, `Rust`) and support `.jsx/.tsx`
 - [x] 📁 Add support for using `.gitignore` file as default exclusion file

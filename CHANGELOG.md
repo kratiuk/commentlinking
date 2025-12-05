@@ -1,5 +1,6 @@
 ## ✨ Features
 
+- Added Markdown Preview with `Comment Linking` support (anchors and links navigation)
 - Added local ignore file support (`.git/.commentlinkingignore`), not tracked by git, highest priority
 
 ## ⚠️ Breaking Changes

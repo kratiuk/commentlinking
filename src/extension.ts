@@ -10,6 +10,7 @@ import {
 import { registerMarkdownDecorations } from "./decorations/markdownDecorator";
 import { registerCommentDocumentLinks } from "./links/commentLinkingProvider";
 import { registerMarkdownDocumentLinks } from "./links/markdownLinksProvider";
+import { MarkdownPreviewPanel } from "./utils/markdownPreview";
 import { AnchorTreeItem } from "./tree/AnchorTreeItem";
 import {
   isSupportedDocument,
@@ -20,6 +21,19 @@ import { kickoff } from "./utils/initialization";
 
 // Main extension activation function that initializes all components
 export function activate(context: vscode.ExtensionContext) {
+  // Register webview panel serializer for restoring preview on reload
+  vscode.window.registerWebviewPanelSerializer(
+    "commentlinking.markdownPreview",
+    {
+      async deserializeWebviewPanel(
+        webviewPanel: vscode.WebviewPanel,
+        state: { uri: string } | undefined
+      ) {
+        MarkdownPreviewPanel.revive(webviewPanel, context, state);
+      },
+    }
+  );
+
   // Create and register main indexing provider
   const provider = new AnchorsTreeDataProvider(context);
   vscode.window.registerTreeDataProvider("commentlinking.anchors", provider);
@@ -162,6 +176,27 @@ export function activate(context: vscode.ExtensionContext) {
           messages.anchorCopiedStatus.replace("{id}", item.anchorId),
           2000
         );
+      }
+    )
+  );
+
+  // Register command for opening Markdown Preview
+  context.subscriptions.push(
+    vscode.commands.registerCommand(
+      "commentlinking.openPreview",
+      async (uri: vscode.Uri) => {
+        if (!uri) {
+          // If called from command palette, use active editor
+          const activeEditor = vscode.window.activeTextEditor;
+          if (activeEditor && activeEditor.document.languageId === "markdown") {
+            uri = activeEditor.document.uri;
+          } else {
+            vscode.window.showWarningMessage("No Markdown file selected");
+            return;
+          }
+        }
+        // Open Webview Panel
+        MarkdownPreviewPanel.createOrShow(context, uri);
       }
     )
   );

@@ -75,6 +75,10 @@
       {
         "command": "commentlinking.openAnchor",
         "title": "Open Anchor"
+      },
+      {
+        "command": "commentlinking.openPreview",
+        "title": "Open with Comment Linking Preview"
       }
     ],
     "viewsContainers": {
@@ -104,6 +108,17 @@
         {
           "command": "commentlinking.openAnchor",
           "when": "false"
+        },
+        {
+          "command": "commentlinking.openPreview",
+          "when": "resourceLangId == markdown"
+        }
+      ],
+      "explorer/context": [
+        {
+          "command": "commentlinking.openPreview",
+          "when": "resourceLangId == markdown",
+          "group": "navigation"
         }
       ],
       "view/item/context": [
