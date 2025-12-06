@@ -63,11 +63,11 @@
 
   # Create and push the tag
   git tag X.X.X
-  git push origin 0.6.0
+  git push origin X.X.X
   ```
 
 - The CI/CD pipeline will automatically:
-  - Transform the tag (`0.6.0` → `v0.6.0`)
+  - Transform the tag (`X.X.X` → `vX.X.X`)
   - Build the extension
   - Create a GitHub Release
   - Publish to VS Code Marketplace
