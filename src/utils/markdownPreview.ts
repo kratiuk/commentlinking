@@ -124,6 +124,7 @@ export class MarkdownPreviewPanel {
     await this.updateContent();
   }
 
+  // Renders markdown with comment linking support
   private async updateContent() {
     if (!this.currentUri) return;
 
@@ -306,6 +307,9 @@ export class MarkdownPreviewPanel {
     }
     .anchor-link::after {
       content: ' 🔗';
+      text-decoration: none;
+      display: inline-block;
+      margin-left: 0.3em;
     }
     .anchor-link-invalid {
       text-decoration: none;
