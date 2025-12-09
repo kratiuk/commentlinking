@@ -36,7 +36,7 @@
 
 - Basic Link ↔ Anchor interaction:
 
-  ![Link-Anchor Demo](./resources/demo/basic-preview.gif)
+  ![Link-Anchor Demo](./resources/demo/extension-demo.gif)
 
 - Anchors view (tree of all anchors):
 
