@@ -121,6 +121,13 @@
           "group": "navigation"
         }
       ],
+      "editor/title/context": [
+        {
+          "command": "commentlinking.openPreview",
+          "when": "resourceLangId == markdown",
+          "group": "navigation"
+        }
+      ],
       "view/item/context": [
         {
           "command": "commentlinking.copyAnchorId",
