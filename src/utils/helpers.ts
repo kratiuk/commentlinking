@@ -109,16 +109,8 @@ export const SUPPORTED_EXTENSIONS: string[] = [
   "cljc",
 ];
 
-function getCustomExtensions(): string[] {
-  const config = vscode.workspace.getConfiguration("commentLinking");
-  const customTypes = config.get<Record<string, string>>("customFileTypes", {});
-  return Object.keys(customTypes).map((ext) =>
-    ext.startsWith(".") ? ext.slice(1) : ext
-  );
-}
-
 export function getAllSupportedExtensions(): string[] {
-  return [...SUPPORTED_EXTENSIONS, ...getCustomExtensions()];
+  return SUPPORTED_EXTENSIONS;
 }
 
 export function isCommentLine(
@@ -354,40 +346,6 @@ export function getCommentTypeForExtension(
   if (extension === "md") return "markdown";
   if (extension === "dart") return "dart";
   if (["clj", "cljs", "cljc"].includes(extension)) return "clojure";
-
-  const config = vscode.workspace.getConfiguration("commentLinking");
-  const customTypes = config.get<Record<string, string>>("customFileTypes", {});
-  const customType = customTypes[`.${extension}`] || customTypes[extension];
-
-  if (
-    customType === "js" ||
-    customType === "python" ||
-    customType === "rust" ||
-    customType === "go" ||
-    customType === "c" ||
-    customType === "cpp" ||
-    customType === "csharp" ||
-    customType === "java" ||
-    customType === "kotlin" ||
-    customType === "swift" ||
-    customType === "php" ||
-    customType === "shell" ||
-    customType === "powershell" ||
-    customType === "yaml" ||
-    customType === "html" ||
-    customType === "ruby" ||
-    customType === "css" ||
-    customType === "toml" ||
-    customType === "vue" ||
-    customType === "svelte" ||
-    customType === "xml" ||
-    customType === "makefile" ||
-    customType === "dockerfile" ||
-    customType === "dart" ||
-    customType === "clojure"
-  ) {
-    return customType;
-  }
 
   return null;
 }

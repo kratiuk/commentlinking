@@ -98,29 +98,6 @@
 
 ---
 
-<h3 align="center">⚙️ Custom File Types</h3>
-
-You can extend support to any file type by configuring custom comment syntax in VS Code settings:
-
-**Open Settings** → Search for `commentLinking.customFileTypes` **OR** directly edit your `settings.json` file
-
-```json
-{
-  "commentLinking.customFileTypes": {
-    ".pde": "js"
-  }
-}
-```
-
-**Configuration format:**
-
-- **Key** (e.g. `".vue"`) - File extension to add support for
-- **Value** - Comment syntax type to use:
-  - `"js"` - Uses `//` comments (like JavaScript/TypeScript)
-  - `"python"` - Uses `#` comments (like Python/Shell)
-
----
-
 <h3 align="center">📂 Indexing scope & exclusions</h3>
 
 - Scans all workspace folders for supported file extensions

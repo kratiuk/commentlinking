@@ -47,19 +47,6 @@
     "configuration": {
       "title": "Comment Linking",
       "properties": {
-        "commentLinking.customFileTypes": {
-          "type": "object",
-          "default": {},
-          "description": "Custom file extensions with their comment syntax. Example: {\".vue\": \"js\", \".go\": \"js\", \".sh\": \"python\"}",
-          "additionalProperties": {
-            "type": "string",
-            "enum": [
-              "js",
-              "python"
-            ],
-            "description": "Comment syntax type: 'js' for // comments, 'python' for # comments"
-          }
-        },
         "commentLinking.useGitignore": {
           "type": "boolean",
           "default": true,

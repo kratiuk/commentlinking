@@ -5,8 +5,8 @@
 
 ## ⚠️ Breaking Changes
 
-- Removed legacy syntax support
-- Removed `commentLinking.enableLegacySyntax` setting
+- Removed legacy syntax support and `commentLinking.enableLegacySyntax` setting
+- Removed custom file types support and `commentLinking.customFileTypes` setting
 
 ## 🐛 Fixes
 

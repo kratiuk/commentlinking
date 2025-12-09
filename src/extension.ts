@@ -131,10 +131,7 @@ export function activate(context: vscode.ExtensionContext) {
 
   context.subscriptions.push(
     vscode.workspace.onDidChangeConfiguration((e) => {
-      if (
-        e.affectsConfiguration("commentLinking.customFileTypes") ||
-        e.affectsConfiguration("commentLinking.useGitignore")
-      ) {
+      if (e.affectsConfiguration("commentLinking.useGitignore")) {
         provider.debouncedRebuild();
         refreshDecorationsNow();
       }
