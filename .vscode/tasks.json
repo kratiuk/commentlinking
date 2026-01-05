@@ -9,7 +9,23 @@
 				"reveal": "never"
 			},
 			"isBackground": true,
-			"problemMatcher": "$tsc-watch"
+			"problemMatcher": {
+				"owner": "esbuild",
+				"pattern": [
+					{
+						"regexp": "^\\s*(.+):(\\d+):(\\d+):\\s*(.+)$",
+						"file": 1,
+						"line": 2,
+						"column": 3,
+						"message": 4
+					}
+				],
+				"background": {
+					"activeOnStart": true,
+					"beginsPattern": "\\[esbuild\\] watching",
+					"endsPattern": "\\[esbuild\\] watching"
+				}
+			}
 		}
 	]
 }

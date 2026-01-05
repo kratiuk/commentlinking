@@ -1,5 +1,6 @@
 import * as vscode from "vscode";
-import { getIgnorePatterns } from "./ignore";
+
+import { getIgnorePatterns } from "@/utils/ignore";
 
 // Files
 
@@ -9,7 +10,7 @@ export async function findAllSupportedFiles(): Promise<vscode.Uri[]> {
   const excludePattern = await getIgnorePatterns();
 
   const patterns = getSupportedGlobPatterns();
-  let allFiles: vscode.Uri[] = [];
+  const allFiles: vscode.Uri[] = [];
 
   // Use exclude parameter to filter files during search
   const lists = await Promise.all(

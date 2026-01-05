@@ -1,7 +1,7 @@
 import * as vscode from "vscode";
 
-import { AnchorsTreeDataProvider } from "../anchors/AnchorsTreeDataProvider";
-import messages from "../constants/messages";
+import { AnchorsTreeDataProvider } from "@/anchors/AnchorsTreeDataProvider";
+import messages from "@/constants/messages";
 
 /**
  * Starts initial indexing (wrapper with error handling)

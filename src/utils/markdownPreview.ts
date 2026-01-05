@@ -1,6 +1,6 @@
 import * as vscode from "vscode";
 
-import { anchorIndex } from "../anchors/AnchorIndex";
+import { anchorIndex } from "@/anchors/AnchorIndex";
 
 /**
  * Simple Webview Panel for Markdown Preview with Comment Linking support

@@ -1,14 +1,15 @@
 import * as vscode from "vscode";
+
+import { anchorIndex } from "@/anchors/AnchorIndex";
+import { createDecorationTypes } from "@/decorations/styles";
 import {
-  getSuppressDecorationOnJump,
   clearSuppressDecorationOnJump,
-} from "../utils/helpers";
-import { anchorIndex } from "../anchors/AnchorIndex";
+  getSuppressDecorationOnJump,
+} from "@/utils/helpers";
 import {
   scanMarkdownBacklinkAnchorMatches,
   scanMarkdownBacklinkLinkMatches,
-} from "../utils/helpers";
-import { createDecorationTypes } from "./styles";
+} from "@/utils/helpers";
 
 let decorationsBundle: ReturnType<typeof createDecorationTypes> | null = null;
 

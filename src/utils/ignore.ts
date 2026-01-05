@@ -42,7 +42,15 @@ export async function readIgnoreFiles(): Promise<string[]> {
   const readFile = async (filePath: vscode.Uri): Promise<string[]> => {
     try {
       const content = await vscode.workspace.fs.readFile(filePath);
-      const text = new (globalThis as any).TextDecoder().decode(content);
+      const textDecoderCtor = (
+        globalThis as {
+          TextDecoder?: new () => { decode: (_input: Uint8Array) => string };
+        }
+      ).TextDecoder;
+      if (!textDecoderCtor) {
+        return [];
+      }
+      const text = new textDecoderCtor().decode(content);
       return text
         .split("\n")
         .map((line: string) => line.trim())

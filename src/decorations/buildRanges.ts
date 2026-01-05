@@ -1,12 +1,12 @@
 import * as vscode from "vscode";
 
-import { getSuppressDecorationOnJump } from "../utils/helpers";
+import { getSuppressDecorationOnJump } from "@/utils/helpers";
 import {
   scanBacklinkAnchorMatches,
   scanBacklinkLinkMatches,
   scanMarkdownBacklinkAnchorMatches,
   scanMarkdownBacklinkLinkMatches,
-} from "../utils/helpers";
+} from "@/utils/helpers";
 
 export interface BuiltRanges {
   anchorTextRanges: vscode.DecorationOptions[];
@@ -157,7 +157,7 @@ export function buildDecorationRanges(
         new vscode.Position(m.lineNumber, m.selectionEndColumn)
       );
       const pos = selection?.active;
-      let cursorInside =
+      const cursorInside =
         !!pos &&
         pos.line === m.lineNumber &&
         pos.character >= m.columnStart &&

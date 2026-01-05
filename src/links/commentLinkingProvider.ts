@@ -1,12 +1,12 @@
 import * as vscode from "vscode";
 
+import { anchorIndex } from "@/anchors/AnchorIndex";
+import messages from "@/constants/messages";
 import {
-  isSupportedDocument,
   getDocumentSelectorsForLinks,
+  isSupportedDocument,
   scanBacklinkLinkMatches,
-} from "../utils/helpers";
-import { anchorIndex } from "../anchors/AnchorIndex";
-import messages from "../constants/messages";
+} from "@/utils/helpers";
 
 export function registerCommentDocumentLinks(
   context: vscode.ExtensionContext

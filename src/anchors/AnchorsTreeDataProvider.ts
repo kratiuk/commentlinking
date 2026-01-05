@@ -1,20 +1,18 @@
 import * as vscode from "vscode";
 
-import { anchorIndex } from "./AnchorIndex";
-import messages from "../constants/messages";
-import { AnchorTreeItem } from "../tree/AnchorTreeItem";
-import { FileTreeItem } from "../tree/FileTreeItem";
+import { anchorIndex } from "@/anchors/AnchorIndex";
+import messages from "@/constants/messages";
+import type { TreeNode } from "@/constants/types";
+import { AnchorTreeItem } from "@/tree/AnchorTreeItem";
+import { FileTreeItem } from "@/tree/FileTreeItem";
 import {
   findAllSupportedFiles,
   scanUniversalBacklinkAnchorMatches,
-} from "../utils/helpers";
+} from "@/utils/helpers";
 
-import { TreeNode } from "../constants/types";
-import "../constants/types"; // Global timer function declarations
 
 export class AnchorsTreeDataProvider
-  implements vscode.TreeDataProvider<TreeNode>
-{
+  implements vscode.TreeDataProvider<TreeNode> {
   private readonly onDidChangeTreeDataEmitter = new vscode.EventEmitter<void>();
   readonly onDidChangeTreeData: vscode.Event<void> =
     this.onDidChangeTreeDataEmitter.event;
@@ -28,11 +26,11 @@ export class AnchorsTreeDataProvider
   private currentDuplicateIds: string[] = [];
 
   // Timers and utilities
-  private rebuildTimer: any;
-  private duplicateNotifier: any;
+  private rebuildTimer: ReturnType<typeof setTimeout> | undefined;
+  private duplicateNotifier: ReturnType<typeof setInterval> | undefined;
   private outputChannel = vscode.window.createOutputChannel("Comment Linking");
 
-  constructor(private readonly context: vscode.ExtensionContext) {}
+  constructor(private readonly context: vscode.ExtensionContext) { }
 
   /**
    * Main indexing trigger with debouncing logic
@@ -111,7 +109,11 @@ export class AnchorsTreeDataProvider
             anchors.length.toString()
           )
         );
-      } catch {}
+      } catch (error) {
+        this.outputChannel.appendLine(
+          ` - failed to process file: ${String(error)}`
+        );
+      }
     }
 
     this.cachedAnchorItems = anchorItems.sort((a, b) =>

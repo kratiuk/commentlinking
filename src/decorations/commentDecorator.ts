@@ -1,15 +1,15 @@
 import * as vscode from "vscode";
 
+import { anchorIndex } from "@/anchors/AnchorIndex";
+import { buildDecorationRanges } from "@/decorations/buildRanges";
+import { createDecorationTypes } from "@/decorations/styles";
 import {
-  getSuppressDecorationOnJump,
   clearSuppressDecorationOnJump,
-} from "../utils/helpers";
-import { anchorIndex } from "../anchors/AnchorIndex";
-import { isSupportedDocument } from "../utils/helpers";
-import { createDecorationTypes } from "./styles";
-import { buildDecorationRanges } from "./buildRanges";
+  getSuppressDecorationOnJump,
+} from "@/utils/helpers";
+import { isSupportedDocument } from "@/utils/helpers";
 
-let _decorateEditorRef: ((editor?: vscode.TextEditor) => void) | null = null;
+let _decorateEditorRef: ((_editor?: vscode.TextEditor) => void) | null = null;
 
 export function refreshDecorationsNow() {
   const editor = vscode.window.activeTextEditor;
