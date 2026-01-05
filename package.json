@@ -42,6 +42,7 @@
     "watch": "node esbuild.config.mjs --watch",
     "lint": "eslint \"src/**/*.ts\"",
     "lint:fix": "eslint \"src/**/*.ts\" --fix",
+    "prepare": "husky",
     "package": "pnpm dlx vsce package",
     "count": "cloc .vscode src scripts package.json .github/workflows"
   },
@@ -138,6 +139,7 @@
     "eslint-import-resolver-typescript": "^4.4.4",
     "eslint-plugin-import": "^2.32.0",
     "eslint-plugin-simple-import-sort": "^12.1.1",
+    "husky": "^9.1.7",
     "typescript": "^5.9.3"
   }
 }
