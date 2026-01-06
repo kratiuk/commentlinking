@@ -65,6 +65,13 @@
         }
       }
     ],
+    "grammars": [
+      {
+        "language": "commentlinkingignore",
+        "scopeName": "source.ignore",
+        "path": "./syntaxes/commentlinkingignore.tmLanguage.json"
+      }
+    ],
     "configuration": {
       "title": "Comment Linking",
       "properties": {
