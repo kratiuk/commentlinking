@@ -47,6 +47,24 @@
     "count": "cloc .vscode src scripts package.json .github/workflows"
   },
   "contributes": {
+    "languages": [
+      {
+        "id": "commentlinkingignore",
+        "aliases": [
+          "Comment Linking Ignore"
+        ],
+        "filenames": [
+          ".commentlinkingignore"
+        ],
+        "extensions": [
+          ".commentlinkingignore"
+        ],
+        "icon": {
+          "light": "./resources/icon.png",
+          "dark": "./resources/icon.png"
+        }
+      }
+    ],
     "configuration": {
       "title": "Comment Linking",
       "properties": {
