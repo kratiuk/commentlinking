@@ -2,7 +2,7 @@
   "name": "commentlinking",
   "displayName": "Comment Linking",
   "description": "🔗 Link between comments in code. Create anchors and jump to them from anywhere",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "icon": "resources/icon.png",
   "author": {
     "name": "Viktor Kratiuk",
