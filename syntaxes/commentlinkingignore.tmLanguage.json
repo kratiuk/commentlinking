@@ -1,22 +1,9 @@
 {
-  "scopeName": "source.ignore",
-  "name": "Comment Linking Ignore",
+  "scopeName": "source.commentlinkingignore",
+  "name": "Command Linking Ignore",
   "patterns": [
     {
-      "name": "comment.line.number-sign.ignore",
-      "match": "^\\s*#.*$"
-    },
-    {
-      "name": "keyword.operator.negation.ignore",
-      "match": "^\\s*!.*$"
-    },
-    {
-      "name": "constant.language.directory.ignore",
-      "match": ".+/$"
-    },
-    {
-      "name": "string.unquoted.pattern.ignore",
-      "match": "^(?!\\s*$).+$"
+      "include": "source.ignore"
     }
   ]
 }

@@ -51,7 +51,7 @@
       {
         "id": "commentlinkingignore",
         "aliases": [
-          "Comment Linking Ignore"
+          "Command Linking Ignore"
         ],
         "filenames": [
           ".commentlinkingignore"
@@ -68,7 +68,7 @@
     "grammars": [
       {
         "language": "commentlinkingignore",
-        "scopeName": "source.ignore",
+        "scopeName": "source.commentlinkingignore",
         "path": "./syntaxes/commentlinkingignore.tmLanguage.json"
       }
     ],
