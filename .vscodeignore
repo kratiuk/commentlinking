@@ -6,6 +6,8 @@
 !out/**
 !resources
 !resources/**
+!syntaxes
+!syntaxes/**
 !package.json
 !CHANGELOG.md
 !README.md
