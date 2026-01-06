@@ -1,10 +1,4 @@
-## ✨ Features
+## 🐛 Fixes
 
-- Added custom icon for `.commentlinkingignore`
-- Added custom ignore-style syntax for `.commentlinkingignore`
-
-## 👨‍💻 Developer
-
-- Added pre-commit hook for linting
-- Added build with `ESBuild`
-- Added linting with `ESLint`
+- Fixed extension overriding default highlighting for ignore files
+- Included custom syntax folder in VS Code packaging
