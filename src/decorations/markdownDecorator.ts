@@ -1,6 +1,9 @@
 import * as vscode from "vscode";
+
 import { anchorIndex } from "@anchors/AnchorIndex";
+
 import { createDecorationTypes } from "@decorations/styles";
+
 import {
   clearSuppressDecorationOnJump,
   getSuppressDecorationOnJump,

@@ -1,4 +1,5 @@
 import * as vscode from "vscode";
+
 import { getIgnorePatterns } from "@utils/ignore";
 
 // Files

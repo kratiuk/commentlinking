@@ -1,5 +1,7 @@
 import * as vscode from "vscode";
+
 import { AnchorsTreeDataProvider } from "@anchors/AnchorsTreeDataProvider";
+
 import messages from "@constants/messages";
 
 /**

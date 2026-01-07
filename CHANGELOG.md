@@ -5,3 +5,4 @@
 ## 🧹 Refactor
 
 - Updated import alias format from `@/` to `@`
+- Added lint import grouping rules for domain-based ordering

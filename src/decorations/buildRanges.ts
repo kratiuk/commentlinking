@@ -1,4 +1,5 @@
 import * as vscode from "vscode";
+
 import { getSuppressDecorationOnJump } from "@utils/helpers";
 import {
   scanBacklinkAnchorMatches,

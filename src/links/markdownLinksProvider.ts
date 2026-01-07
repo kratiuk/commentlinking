@@ -1,5 +1,7 @@
 import * as vscode from "vscode";
+
 import { anchorIndex } from "@anchors/AnchorIndex";
+
 import { scanMarkdownBacklinkLinkMatches } from "@utils/helpers";
 
 export function registerMarkdownDocumentLinks(

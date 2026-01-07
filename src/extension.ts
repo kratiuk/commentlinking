@@ -1,15 +1,21 @@
 import * as vscode from "vscode";
+
 import { anchorIndex } from "@anchors/AnchorIndex";
 import { AnchorsTreeDataProvider } from "@anchors/AnchorsTreeDataProvider";
+
 import messages from "@constants/messages";
+
 import {
   refreshDecorationsNow,
   registerCommentDecorations,
 } from "@decorations/commentDecorator";
 import { registerMarkdownDecorations } from "@decorations/markdownDecorator";
+
 import { registerCommentDocumentLinks } from "@links/commentLinkingProvider";
 import { registerMarkdownDocumentLinks } from "@links/markdownLinksProvider";
+
 import { AnchorTreeItem } from "@tree/AnchorTreeItem";
+
 import {
   getSupportedGlobPatterns,
   isSupportedDocument,
