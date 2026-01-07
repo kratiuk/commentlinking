@@ -1,6 +1,6 @@
 {
   "scopeName": "source.commentlinkingignore",
-  "name": "Command Linking Ignore",
+  "name": "Comment Linking Ignore",
   "patterns": [
     {
       "include": "source.ignore"

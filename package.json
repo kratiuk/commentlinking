@@ -51,7 +51,7 @@
       {
         "id": "commentlinkingignore",
         "aliases": [
-          "Command Linking Ignore"
+          "Comment Linking Ignore"
         ],
         "filenames": [
           ".commentlinkingignore"
