@@ -1,12 +1,11 @@
 import * as vscode from "vscode";
-
-import { getSuppressDecorationOnJump } from "@/utils/helpers";
+import { getSuppressDecorationOnJump } from "@utils/helpers";
 import {
   scanBacklinkAnchorMatches,
   scanBacklinkLinkMatches,
   scanMarkdownBacklinkAnchorMatches,
   scanMarkdownBacklinkLinkMatches,
-} from "@/utils/helpers";
+} from "@utils/helpers";
 
 export interface BuiltRanges {
   anchorTextRanges: vscode.DecorationOptions[];

@@ -1,14 +1,13 @@
 import * as vscode from "vscode";
-
-import { anchorIndex } from "@/anchors/AnchorIndex";
-import messages from "@/constants/messages";
-import type { TreeNode } from "@/constants/types";
-import { AnchorTreeItem } from "@/tree/AnchorTreeItem";
-import { FileTreeItem } from "@/tree/FileTreeItem";
+import { anchorIndex } from "@anchors/AnchorIndex";
+import messages from "@constants/messages";
+import type { TreeNode } from "@constants/types";
+import { AnchorTreeItem } from "@tree/AnchorTreeItem";
+import { FileTreeItem } from "@tree/FileTreeItem";
 import {
   findAllSupportedFiles,
   scanUniversalBacklinkAnchorMatches,
-} from "@/utils/helpers";
+} from "@utils/helpers";
 
 
 export class AnchorsTreeDataProvider

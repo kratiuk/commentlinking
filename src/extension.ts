@@ -1,23 +1,22 @@
 import * as vscode from "vscode";
-
-import { anchorIndex } from "@/anchors/AnchorIndex";
-import { AnchorsTreeDataProvider } from "@/anchors/AnchorsTreeDataProvider";
-import messages from "@/constants/messages";
+import { anchorIndex } from "@anchors/AnchorIndex";
+import { AnchorsTreeDataProvider } from "@anchors/AnchorsTreeDataProvider";
+import messages from "@constants/messages";
 import {
   refreshDecorationsNow,
   registerCommentDecorations,
-} from "@/decorations/commentDecorator";
-import { registerMarkdownDecorations } from "@/decorations/markdownDecorator";
-import { registerCommentDocumentLinks } from "@/links/commentLinkingProvider";
-import { registerMarkdownDocumentLinks } from "@/links/markdownLinksProvider";
-import { AnchorTreeItem } from "@/tree/AnchorTreeItem";
+} from "@decorations/commentDecorator";
+import { registerMarkdownDecorations } from "@decorations/markdownDecorator";
+import { registerCommentDocumentLinks } from "@links/commentLinkingProvider";
+import { registerMarkdownDocumentLinks } from "@links/markdownLinksProvider";
+import { AnchorTreeItem } from "@tree/AnchorTreeItem";
 import {
   getSupportedGlobPatterns,
   isSupportedDocument,
   setSuppressDecorationOnJump,
-} from "@/utils/helpers";
-import { kickoff } from "@/utils/initialization";
-import { MarkdownPreviewPanel } from "@/utils/markdownPreview";
+} from "@utils/helpers";
+import { kickoff } from "@utils/initialization";
+import { MarkdownPreviewPanel } from "@utils/markdownPreview";
 
 // Main extension activation function that initializes all components
 export function activate(context: vscode.ExtensionContext) {

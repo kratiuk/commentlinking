@@ -1,13 +1,12 @@
 import * as vscode from "vscode";
-
-import { anchorIndex } from "@/anchors/AnchorIndex";
-import { buildDecorationRanges } from "@/decorations/buildRanges";
-import { createDecorationTypes } from "@/decorations/styles";
+import { anchorIndex } from "@anchors/AnchorIndex";
+import { buildDecorationRanges } from "@decorations/buildRanges";
+import { createDecorationTypes } from "@decorations/styles";
 import {
   clearSuppressDecorationOnJump,
   getSuppressDecorationOnJump,
-} from "@/utils/helpers";
-import { isSupportedDocument } from "@/utils/helpers";
+} from "@utils/helpers";
+import { isSupportedDocument } from "@utils/helpers";
 
 let _decorateEditorRef: ((_editor?: vscode.TextEditor) => void) | null = null;
 
