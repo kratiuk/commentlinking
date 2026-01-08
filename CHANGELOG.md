@@ -2,6 +2,10 @@
 
 - Fixed incorrect syntax name: "Command Linking Ignore" -> "Comment Linking Ignore"
 
+## 🧰 Scripts
+
+- Updated count script to use updated cloc paths/exclusions and a dedicated script file
+
 ## 🧹 Refactor
 
 - Updated import alias format from `@/` to `@`

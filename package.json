@@ -44,7 +44,7 @@
     "lint:fix": "eslint \"src/**/*.ts\" --fix",
     "prepare": "husky",
     "package": "pnpm dlx vsce package",
-    "count": "cloc .vscode src scripts package.json .github/workflows"
+    "count": "node scripts/count-code.js"
   },
   "contributes": {
     "languages": [
