@@ -144,6 +144,12 @@ To view detailed indexing logs and performance information:
 
 ---
 
+<h3 align="center">🤝 Contributing</h3>
+
+See [CONTRIBUTING.md](./CONTRIBUTING.md) for setup, workflows, and guidelines
+
+---
+
 <h3 align="center">✅ Roadmap / To‑Do</h3>
 
 - [ ] 🔗 Add support for creating anchors and links without preview text in backlinks
