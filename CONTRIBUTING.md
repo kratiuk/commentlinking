@@ -49,6 +49,8 @@
 
 - Always update `CHANGELOG.md` with your changes before committing
 
+- A pre-commit hook runs linting before each commit. If it fails, fix lint errors and retry the commit
+
 ---
 
 <h4 align="center">🚀 Release</h4>
