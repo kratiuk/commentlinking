@@ -152,6 +152,8 @@ See [CONTRIBUTING.md](./CONTRIBUTING.md) for setup, workflows, and guidelines
 
 <h3 align="center">✅ Roadmap / To‑Do</h3>
 
+- [ ] 💾 Add caching: avoid reindexing unchanged files via hash + modified date
+- [ ] 💤 Add lazy indexing: index only the files needed right now
 - [ ] 🔗 Add support for creating anchors and links without preview text in backlinks
 - [ ] 🔀 Add sorting by line numbers in anchor tree view
 - [ ] ⚙️ Add support for custom comment types for specific files
