@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file
 
 ## Unreleased
 
+### 🧰 Scripts
+
+- Added pnpm-workspace.yaml to explicitly allow builds for esbuild and unrs-resolver
+
 ### 📚 Docs
 
 - Added full changelog history from all versions into this file
