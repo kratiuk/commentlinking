@@ -35,6 +35,18 @@
 
 ---
 
+<h3 align="center">🧪 Running Tests</h3>
+
+- Run the test suite:
+
+  ```bash
+  pnpm test
+  ```
+
+- Tests run inside a VS Code Extension Development Host — `@vscode/test-cli` downloads a separate isolated VS Code instance into `.vscode-test/` and launches it with the extension loaded (same mechanism as `F5`, but a dedicated copy for tests)
+
+---
+
 <h3 align="center">📦 Submitting Changes</h3>
 
 ---

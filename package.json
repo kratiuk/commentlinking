@@ -39,9 +39,11 @@
   "scripts": {
     "vscode:prepublish": "pnpm run compile",
     "compile": "node esbuild.config.mjs",
+    "compile:test": "node tests/esbuild.config.mjs",
     "watch": "node esbuild.config.mjs --watch",
-    "lint": "eslint \"src/**/*.ts\"",
-    "lint:fix": "eslint \"src/**/*.ts\" --fix",
+    "test": "pnpm run compile:test && vscode-test --config tests/.vscode-test.mjs",
+    "lint": "eslint \"src/**/*.ts\" \"tests/**/*.ts\"",
+    "lint:fix": "eslint \"src/**/*.ts\" \"tests/**/*.ts\" --fix",
     "prepare": "husky",
     "package": "pnpm dlx vsce package",
     "count": "node scripts/count-code.js"
@@ -154,10 +156,13 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.39.2",
+    "@types/mocha": "^10.0.10",
     "@types/node": "^25.0.3",
     "@types/vscode": "^1.80.0",
     "@typescript-eslint/eslint-plugin": "^8.51.0",
     "@typescript-eslint/parser": "^8.51.0",
+    "@vscode/test-cli": "^0.0.12",
+    "@vscode/test-electron": "^3.0.0",
     "esbuild": "^0.25.12",
     "esbuild-plugin-tsconfig-paths": "^1.0.2",
     "eslint": "^9.39.2",

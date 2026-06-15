@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file
 
 ## Unreleased
 
+### 🧪 Testing
+
+- Added VS Code extension test infrastructure using @vscode/test-cli, mocha, and a dedicated esbuild config for tests
+
 ### 🧰 Scripts
 
 - Added pnpm-workspace.yaml to explicitly allow builds for esbuild and unrs-resolver

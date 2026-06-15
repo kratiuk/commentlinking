@@ -11,7 +11,7 @@ const __dirname = path.dirname(__filename);
 
 export default [
   {
-    ignores: ["out/**", "dist/**", "node_modules/**"],
+    ignores: ["out/**", "dist/**", "node_modules/**", "tests/out/**"],
   },
   eslintJs.configs.recommended,
   {
@@ -22,6 +22,12 @@ export default [
         clearInterval: "readonly",
         setTimeout: "readonly",
         clearTimeout: "readonly",
+        suite: "readonly",
+        suiteSetup: "readonly",
+        suiteTeardown: "readonly",
+        test: "readonly",
+        setup: "readonly",
+        teardown: "readonly",
       },
       parser: tsParser,
       parserOptions: {

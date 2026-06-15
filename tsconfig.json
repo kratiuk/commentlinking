@@ -4,8 +4,9 @@
 		"module": "commonjs",
 		"lib": ["ES2020"],
 		"outDir": "out",
-		"rootDir": "src",
+		"rootDir": ".",
 		"baseUrl": ".",
+		"ignoreDeprecations": "6.0",
 		"paths": {
 			"@*": ["src/*"]
 		},
@@ -15,8 +16,8 @@
 		"skipLibCheck": true,
 		"sourceMap": true,
 		"removeComments": true,
-		"types": ["vscode", "node"]
+		"types": ["vscode", "node", "mocha"]
 	},
-	"include": ["src"],
+	"include": ["src", "tests"],
 	"exclude": ["node_modules", ".vscode-test"]
 }
