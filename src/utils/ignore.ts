@@ -63,11 +63,14 @@ export async function readIgnoreFiles(): Promise<string[]> {
   const ignorePatterns: string[] = [];
 
   for (const folder of workspaceFolders) {
+    // Read root and all nested .gitignore files
     if (useGitignore) {
-      const gitIgnore = await readFile(
-        vscode.Uri.joinPath(folder.uri, ".gitignore")
+      const gitignoreUris = await vscode.workspace.findFiles(
+        new vscode.RelativePattern(folder, "**/.gitignore")
       );
-      ignorePatterns.push(...gitIgnore);
+      for (const uri of gitignoreUris) {
+        ignorePatterns.push(...(await readFile(uri)));
+      }
     }
 
     const commentIgnore = await readFile(

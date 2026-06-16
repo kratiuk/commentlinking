@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file
 
 ## Unreleased
 
+### ✨ Features
+
+- Extended `.gitignore` support to read all nested `.gitignore` files recursively within workspace folders, not just the root one ([#5](https://github.com/kratiuk/commentlinking/issues/5))
+
 ### 🧪 Testing
 
 - Added VS Code extension test infrastructure using @vscode/test-cli, mocha, and a dedicated esbuild config for tests
